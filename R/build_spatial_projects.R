@@ -1,3 +1,21 @@
+source_province_matches_spatial <- function(source_value, spatial_value) {
+  if (
+    is.na(source_value) ||
+    is.na(spatial_value) ||
+    !nzchar(trimws(as.character(source_value))) ||
+    !nzchar(trimws(as.character(spatial_value)))
+  ) {
+    return(NA)
+  }
+
+  declared_provinces <- strsplit(
+    tolower(trimws(as.character(source_value))),
+    "\\s+-\\s+"
+  )[[1]]
+
+  tolower(trimws(as.character(spatial_value))) %in% trimws(declared_provinces)
+}
+
 build_spatial_projects <- function(projects, provinces) {
   required_project_fields <- c("latitude", "longitude", "source_province")
   missing_project_fields <- setdiff(required_project_fields, names(projects))
@@ -93,9 +111,17 @@ build_spatial_projects <- function(projects, provinces) {
     !is.na(source_province) &
     nzchar(trimws(source_province))
 
-  province_match[comparable] <-
-    tolower(trimws(source_province[comparable])) ==
-    tolower(trimws(spatial_province[comparable]))
+  comparable_indexes <- which(comparable)
+  province_match[comparable_indexes] <- vapply(
+    comparable_indexes,
+    function(index) {
+      source_province_matches_spatial(
+        source_province[[index]],
+        spatial_province[[index]]
+      )
+    },
+    logical(1)
+  )
 
   project_points$spatial_province <- spatial_province
   project_points$province_code <- province_code

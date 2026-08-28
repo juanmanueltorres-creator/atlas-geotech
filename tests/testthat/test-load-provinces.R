@@ -54,6 +54,30 @@ if (exists("read_argentina_provinces", mode = "function")) {
     expect_equal(provinces$in1, "70")
   })
 
+  test_that("read_argentina_provinces repairs invalid polygon topology before spatial use", {
+    path <- tempfile(fileext = ".geojson")
+    on.exit(unlink(path), add = TRUE)
+
+    invalid_geojson <- paste0(
+      '{"type":"FeatureCollection","features":[',
+      '{"type":"Feature","properties":{"nombre":"Provincia Test","id":"99"},',
+      '"geometry":{"type":"Polygon","coordinates":[[[',
+      '-70,-30],[-68,-28],[-70,-28],[-68,-30],[-70,-30',
+      ']]]}}]}'
+    )
+    writeLines(invalid_geojson, path, useBytes = TRUE)
+
+    provinces <- read_argentina_provinces(path)
+
+    expect_equal(nrow(provinces), 1)
+    expect_identical(sf::st_crs(provinces)$epsg, 4326L)
+    expect_true(all(sf::st_is_valid(provinces)))
+    expect_true(all(as.character(sf::st_geometry_type(provinces)) %in% c("POLYGON", "MULTIPOLYGON")))
+
+    probe <- sf::st_sfc(sf::st_point(c(-69, -29)), crs = 4326)
+    expect_no_error(sf::st_within(probe, provinces))
+  })
+
   test_that("read_argentina_provinces fails explicitly when geometry cannot be read", {
     missing_file <- file.path(tempdir(), "argentina-provinces-does-not-exist.geojson")
 

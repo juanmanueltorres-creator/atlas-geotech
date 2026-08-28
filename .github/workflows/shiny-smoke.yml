@@ -45,7 +45,8 @@ jobs:
             "readr",
             "sf",
             "shiny",
-            "leaflet"
+            "leaflet",
+            "chromote"
           ))
 
       - name: Start Atlas Shiny app
@@ -71,20 +72,51 @@ jobs:
           cat artifacts/shiny.log || true
           exit 1
 
-      - name: Capture real-data screenshot
-        shell: bash
+      - name: Wait for Leaflet data and capture screenshot
+        shell: Rscript {0}
         run: |
-          google-chrome \
-            --headless \
-            --no-sandbox \
-            --disable-gpu \
-            --hide-scrollbars \
-            --window-size=1440,1000 \
-            --virtual-time-budget=10000 \
-            --screenshot=artifacts/atlas-shiny.png \
-            http://127.0.0.1:3838/
+          browser <- chromote::ChromoteSession$new()
+          on.exit(browser$close(), add = TRUE)
 
-          test -s artifacts/atlas-shiny.png
+          browser$Page$navigate("http://127.0.0.1:3838/")
+
+          marker_count <- 0L
+          for (attempt in seq_len(45)) {
+            result <- browser$Runtime$evaluate(
+              expression = paste(
+                "(() => {",
+                "const mapPane = document.querySelector('#map .leaflet-map-pane');",
+                "const marks = document.querySelectorAll('#map .leaflet-interactive');",
+                "return mapPane ? marks.length : 0;",
+                "})()"
+              ),
+              returnByValue = TRUE
+            )
+
+            marker_count <- as.integer(result$result$value %||% 0)
+            if (!is.na(marker_count) && marker_count > 0L) {
+              break
+            }
+
+            Sys.sleep(1)
+          }
+
+          if (is.na(marker_count) || marker_count <= 0L) {
+            stop("Leaflet map did not render any interactive project features")
+          }
+
+          cat("Rendered Leaflet interactive features:", marker_count, "\n")
+          writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
+
+          browser$screenshot(
+            filename = "artifacts/atlas-shiny.png",
+            format = "png"
+          )
+
+          if (!file.exists("artifacts/atlas-shiny.png") ||
+              file.info("artifacts/atlas-shiny.png")$size <= 0) {
+            stop("Shiny screenshot was not created")
+          }
 
       - name: Upload Shiny smoke evidence
         uses: actions/upload-artifact@v4
@@ -94,5 +126,6 @@ jobs:
             artifacts/atlas-shiny.png
             artifacts/index.html
             artifacts/shiny.log
+            artifacts/leaflet-feature-count.txt
           if-no-files-found: error
           retention-days: 7

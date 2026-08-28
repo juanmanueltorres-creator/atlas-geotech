@@ -31,7 +31,9 @@ jobs:
             "testthat",
             "dplyr",
             "stringr",
-            "readr"
+            "readr",
+            "readxl",
+            "writexl"
           ))
 
       - name: Run contract tests

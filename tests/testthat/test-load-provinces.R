@@ -21,6 +21,39 @@ if (exists("read_argentina_provinces", mode = "function")) {
     expect_true(all(as.character(sf::st_geometry_type(provinces)) %in% c("POLYGON", "MULTIPOLYGON")))
   })
 
+  test_that("read_argentina_provinces normalizes official IGN nam/in1 properties", {
+    path <- tempfile(fileext = ".geojson")
+    on.exit(unlink(path), add = TRUE)
+
+    ring <- matrix(
+      c(
+        -70, -30,
+        -68, -30,
+        -68, -28,
+        -70, -28,
+        -70, -30
+      ),
+      ncol = 2,
+      byrow = TRUE
+    )
+
+    ign_province <- sf::st_sf(
+      nam = "San Juan",
+      in1 = "70",
+      sag = "IGN",
+      geometry = sf::st_sfc(sf::st_polygon(list(ring)), crs = 4326)
+    )
+
+    sf::st_write(ign_province, path, driver = "GeoJSON", quiet = TRUE)
+
+    provinces <- read_argentina_provinces(path)
+
+    expect_equal(provinces$nombre, "San Juan")
+    expect_equal(provinces$id, "70")
+    expect_equal(provinces$nam, "San Juan")
+    expect_equal(provinces$in1, "70")
+  })
+
   test_that("read_argentina_provinces fails explicitly when geometry cannot be read", {
     missing_file <- file.path(tempdir(), "argentina-provinces-does-not-exist.geojson")
 

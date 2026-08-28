@@ -100,24 +100,39 @@ atlas_provenance_ui <- function(metadata) {
     return(
       shiny::tags$div(
         id = "provenance",
+        class = "atlas-provenance",
         shiny::tags$strong("Fuentes"),
-        shiny::tags$p("Metadata de procedencia no disponible.")
+        shiny::tags$div("Metadata de procedencia no disponible.")
       )
     )
   }
 
-  source_lines <- paste0(
-    as.character(metadata$source_name),
-    " · recuperado: ",
-    as.character(metadata$retrieved_at)
-  )
+  source_names <- trimws(as.character(metadata$source_name))
+  source_names <- unique(source_names[!is.na(source_names) & nzchar(source_names)])
+
+  retrieved_at <- trimws(as.character(metadata$retrieved_at))
+  retrieved_at <- unique(retrieved_at[!is.na(retrieved_at) & nzchar(retrieved_at)])
+
+  source_text <- if (length(source_names) > 0) {
+    paste(source_names, collapse = " · ")
+  } else {
+    "Fuentes no informadas"
+  }
+
+  retrieved_text <- if (length(retrieved_at) == 1) {
+    paste0("Recuperado ", retrieved_at[[1]])
+  } else if (length(retrieved_at) > 1) {
+    paste0("Recuperaciones ", paste(retrieved_at, collapse = " · "))
+  } else {
+    "Fecha de recuperación no disponible"
+  }
 
   shiny::tags$div(
     id = "provenance",
+    class = "atlas-provenance",
     shiny::tags$strong("Fuentes"),
-    shiny::tags$ul(
-      lapply(source_lines, shiny::tags$li)
-    )
+    shiny::tags$div(source_text),
+    shiny::tags$small(retrieved_text)
   )
 }
 
@@ -140,7 +155,27 @@ build_atlas_ui <- function(projects, metadata) {
   stage_choices <- atlas_filter_choices(projects$stage)
 
   shiny::fluidPage(
-    shiny::titlePanel("Atlas Geotech · Minería Argentina"),
+    shiny::tags$head(
+      shiny::tags$style(
+        shiny::HTML(
+          paste(
+            ".atlas-header { margin: 12px 0 10px; }",
+            ".atlas-header h2 { margin: 0; }",
+            ".well { padding: 14px; margin-bottom: 10px; }",
+            ".form-group { margin-bottom: 10px; }",
+            ".atlas-project-count { font-size: 1.15rem; font-weight: 600; margin: 2px 0 12px; }",
+            ".atlas-provenance { font-size: 0.88rem; line-height: 1.35; }",
+            ".atlas-provenance strong, .atlas-provenance small { display: block; }",
+            ".atlas-provenance small { margin-top: 3px; }",
+            sep = "\n"
+          )
+        )
+      )
+    ),
+    shiny::tags$div(
+      class = "atlas-header",
+      shiny::tags$h2("Atlas Geotech · Minería Argentina")
+    ),
     shiny::sidebarLayout(
       shiny::sidebarPanel(
         shiny::selectInput(
@@ -161,10 +196,16 @@ build_atlas_ui <- function(projects, metadata) {
           choices = c("Todos", stage_choices),
           selected = "Todos"
         ),
-        atlas_provenance_ui(metadata)
+        shiny::tags$div(
+          class = "atlas-project-count",
+          shiny::textOutput("project_count", inline = TRUE)
+        ),
+        atlas_provenance_ui(metadata),
+        width = 3
       ),
       shiny::mainPanel(
-        leaflet::leafletOutput("map", height = "70vh")
+        leaflet::leafletOutput("map", height = "82vh"),
+        width = 9
       )
     )
   )
@@ -188,6 +229,12 @@ build_atlas_app <- function(projects, metadata) {
         mineral = atlas_filter_value(input$mineral),
         stage = atlas_filter_value(input$stage)
       )
+    })
+
+    output$project_count <- shiny::renderText({
+      count <- nrow(filtered_projects())
+      noun <- if (count == 1) "proyecto" else "proyectos"
+      paste(count, noun)
     })
 
     output$map <- leaflet::renderLeaflet({

@@ -65,6 +65,7 @@ jobs:
             print(data.frame(
               row = geos_invalid,
               id = as.character(provinces$id[geos_invalid]),
+              in1 = if ("in1" %in% names(provinces)) as.character(provinces$in1[geos_invalid]) else NA_character_,
               nombre = as.character(provinces$nombre[geos_invalid]),
               reason = geos_reason[geos_invalid],
               stringsAsFactors = FALSE
@@ -88,10 +89,44 @@ jobs:
             print(data.frame(
               row = s2_invalid,
               id = as.character(provinces$id[s2_invalid]),
+              in1 = if ("in1" %in% names(provinces)) as.character(provinces$in1[s2_invalid]) else NA_character_,
               nombre = as.character(provinces$nombre[s2_invalid]),
               error = vapply(s2_errors[s2_invalid], identity, character(1)),
               stringsAsFactors = FALSE
             ))
+          }
+
+          repaired <- tryCatch(
+            sf::st_make_valid(provinces),
+            error = function(error) error
+          )
+
+          if (inherits(repaired, "error")) {
+            cat("st_make_valid candidate failed:", conditionMessage(repaired), "\n")
+          } else {
+            repaired_reason <- sf::st_is_valid(repaired, reason = TRUE)
+            repaired_invalid <- which(is.na(repaired_reason) | repaired_reason != "Valid Geometry")
+            repaired_types <- unique(as.character(sf::st_geometry_type(repaired)))
+
+            repaired_s2_errors <- lapply(seq_len(nrow(repaired)), function(index) {
+              tryCatch(
+                {
+                  sf::st_within(probe_point, repaired[index, ])
+                  NULL
+                },
+                error = function(error) conditionMessage(error)
+              )
+            })
+            repaired_s2_invalid <- which(vapply(
+              repaired_s2_errors,
+              function(value) !is.null(value),
+              logical(1)
+            ))
+
+            cat("st_make_valid candidate features:", nrow(repaired), "\n")
+            cat("st_make_valid candidate GEOS invalid:", length(repaired_invalid), "\n")
+            cat("st_make_valid candidate s2-invalid:", length(repaired_s2_invalid), "\n")
+            cat("st_make_valid candidate geometry types:", paste(repaired_types, collapse = ", "), "\n")
           }
 
       - name: Refresh from official public sources

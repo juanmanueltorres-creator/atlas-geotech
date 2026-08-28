@@ -17,6 +17,79 @@ atlas_filter_value <- function(value) {
   value
 }
 
+atlas_display_value <- function(value) {
+  value <- trimws(as.character(value))
+  value[is.na(value) | !nzchar(value)] <- "Sin dato"
+  value
+}
+
+atlas_province_check <- function(value) {
+  if (is.na(value)) {
+    return("Comparación territorial no disponible")
+  }
+
+  if (isTRUE(value)) {
+    return("Coinciden")
+  }
+
+  "Discrepancia territorial"
+}
+
+build_project_popup <- function(projects) {
+  required_fields <- c(
+    "name",
+    "commodity",
+    "stage",
+    "source_province",
+    "spatial_province",
+    "province_match"
+  )
+  missing_fields <- setdiff(required_fields, names(projects))
+
+  if (length(missing_fields) > 0) {
+    stop(
+      sprintf(
+        "Projects are missing fields required for popups: %s",
+        paste(missing_fields, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  names <- atlas_display_value(projects$name)
+  commodities <- atlas_display_value(projects$commodity)
+  stages <- atlas_display_value(projects$stage)
+  source_provinces <- atlas_display_value(projects$source_province)
+  spatial_provinces <- atlas_display_value(projects$spatial_province)
+  province_checks <- vapply(
+    projects$province_match,
+    atlas_province_check,
+    character(1)
+  )
+
+  vapply(
+    seq_len(nrow(projects)),
+    function(index) {
+      as.character(
+        shiny::tags$div(
+          shiny::tags$strong(names[[index]]),
+          shiny::tags$br(),
+          shiny::tags$b("Mineral: "), commodities[[index]],
+          shiny::tags$br(),
+          shiny::tags$b("Etapa: "), stages[[index]],
+          shiny::tags$br(),
+          shiny::tags$b("Provincia declarada: "), source_provinces[[index]],
+          shiny::tags$br(),
+          shiny::tags$b("Provincia espacial: "), spatial_provinces[[index]],
+          shiny::tags$br(),
+          shiny::tags$b("Control territorial: "), province_checks[[index]]
+        )
+      )
+    },
+    character(1)
+  )
+}
+
 atlas_provenance_ui <- function(metadata) {
   if (
     is.null(metadata) ||
@@ -129,7 +202,8 @@ build_atlas_app <- function(projects, metadata) {
           radius = 6,
           stroke = TRUE,
           weight = 1,
-          fillOpacity = 0.8
+          fillOpacity = 0.8,
+          popup = build_project_popup(data)
         )
       }
 

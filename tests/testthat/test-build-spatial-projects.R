@@ -46,6 +46,25 @@ if (exists("build_spatial_projects", mode = "function")) {
     expect_identical(spatial_projects$province_match, c(TRUE, FALSE, NA))
   })
 
+  test_that("province_match accepts a spatial province declared inside a multiprovince SIACAM value", {
+    multiprovince_project <- data.frame(
+      project_id = "4",
+      name = "Proyecto interprovincial",
+      latitude = -29.1,
+      longitude = -69.1,
+      commodity = "Cobre",
+      source_province = "Mendoza - San Juan",
+      stage = "Exploración",
+      stringsAsFactors = FALSE
+    )
+
+    result <- build_spatial_projects(multiprovince_project, provinces)
+
+    expect_identical(result$spatial_province, "San Juan")
+    expect_identical(result$province_match, TRUE)
+    expect_identical(result$source_province, "Mendoza - San Juan")
+  })
+
   test_that("build_spatial_projects refuses unvalidated missing coordinates", {
     invalid_projects <- projects
     invalid_projects$latitude[[1]] <- NA_real_

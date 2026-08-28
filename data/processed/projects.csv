@@ -1,0 +1,332 @@
+project_id,name,latitude,longitude,commodity,source_province,stage,controller_1,share_1,origin_1,controller_2,share_2,origin_2,controller_3,share_3,origin_3,spatial_province,province_code,province_match
+1,20 de septiembre,-24.896,-68.136,Hierro,Salta,Exploración inicial,Diego Ruben Omar,,,,,,,,,Salta,66,TRUE
+2,Acazoque,-24.291,-66.378,Plomo,Salta,Exploración inicial,Nuñez Ramon,,,,,,,,,Salta,66,TRUE
+3,Acoite/Hornillos,-22.305,-65.107,Plomo,Salta,Exploración inicial,Rubiolo Daniel Gerardo,,,,,,,,,Salta,66,TRUE
+4,Adamo,-41.162,-68.505,Oro,Río Negro,Prospección,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+5,Aguas Amargas,-24.685,-66.903,Cobre,Salta,Exploración inicial,Lithium S Corp. S.A,,,,,,,,,Salta,66,TRUE
+6,Aguilar,-23.20575,-65.71747,Plomo,Jujuy,Producción,Grupo Integra,1,Argentina,,,,,,,Jujuy,38,TRUE
+7,Ajedrez,-22.57,-66.35,Oro,Jujuy,Producción,Espíritu de los Andes S.A.,1,Argentina,,,,,,,Jujuy,38,TRUE
+8,Alba X,-24.75354964,-67.53737,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+9,Alcalina,-25.24652872,-67.45351901,Litio,Salta,Exploración avanzada,,,,,,,,,,Catamarca,10,FALSE
+10,Alejandra,-22.408,-64.936,Plomo,Salta,Prospección,Carrazan Susana del Carmen,,,,,,,,,Salta,66,TRUE
+11,Alfil,-41.244,-65.597,Plomo,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+12,Altar,-31.4813,-70.48096,Cobre,San Juan,Evaluación Económica Preliminar,Aldebaran Resources Inc.,0.8,Canadá,Sibanye Stillwater,0.2,Sudáfrica,,,,San Juan,70,TRUE
+13,Altos Del Cura,-29.91748503,-69.5601937,Oro,San Juan,Exploración inicial,,,,-,-,-,-,-,-,San Juan,70,TRUE
+14,Altos Sapitos,-28.76697,-69.11516,Litio,La Rioja,Prospección,Litios del Oeste S.A.,1,Argentina,,,,,,,La Rioja,46,TRUE
+15,"Amarillo Grande (Anit, Sta. Bárbara)",-39.61437,-67.22486,Uranio,Río Negro,Exploración avanzada,Blue Sky Uranium Corp.,1,Canadá,-,-,-,-,-,-,Río Negro,62,TRUE
+16,Ana Maria,-24.103,-66.088,Manganeso,Salta,Prospección,Arquero Gaston Luis - Cardozo Luis Eduardo,,,,,,,,,Salta,66,TRUE
+17,Antofalla Norte,-25.62753,-67.83714,Litio,Catamarca,Exploración inicial,Lithium Energi Exploration Inc,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+18,Aries,-24.354,-66.966,Manganeso,Salta,Exploración inicial,Hantara S.A.,,,,,,,,,Salta,66,TRUE
+19,Arizaro,-24.77014,-67.70972,Litio,Salta,Prefactibilidad,Lithium Chile Inc.,0.8,Canadá,SMG S.R.L.,0.2,Argentina,-,-,-,Salta,66,TRUE
+20,Arizaro,-24.846,-67.947,Litio,Salta,Exploración avanzada,Xizang Zhufeng Resources Co.,1,China,,,,,,,Salta,66,TRUE
+21,Arizaro Norte,-24.39499496,-67.35828148,Litio,Salta,Exploración avanzada,Noa Lithium Brines Inc.,1,Canadá,,,,,,,Salta,66,TRUE
+22,Arizaro Sur,-24.88645,-67.77402,Litio,Salta,Exploración avanzada,Pluspetrol Resources Corp.,1,Paises Bajos,,,,,,,Salta,66,TRUE
+23,Arroyo Perdido,-43.4094444,-68.5305555555555,Uranio,Chubut,Exploración inicial,CNEA,1,Argentina,,,,,,,Chubut,26,TRUE
+24,Bajo de la Alumbrera,-27.19,-66.36,Cobre,Catamarca,Reingeniería,Glencore Plc.,1,Suiza,,,,,,,Catamarca,10,TRUE
+25,Barro Negro,-24.473,-66.211,Cobre,Salta,Exploración avanzada,Cosmos Minerals S.A.,,,,,,,,,Salta,66,TRUE
+26,Benjamin,-28.972411,-67.986733,Cobre,La Rioja,Prospección,EMSE,1,Argentina,,,,,,,La Rioja,46,TRUE
+27,Bordo de la Cueva,-24.433,-66.133,Manganeso,Salta,Exploración avanzada,Minera Anglo American Argentina S.A.,,,,,,,,,Salta,66,TRUE
+28,Brealito,-25.3,-66.343,Cobre,Salta,Exploración avanzada,Cosmos Minerals S.A.,,,,,,,,,Salta,66,TRUE
+29,Buen Augurio,-28.348805,-69.477377,Cobre,La Rioja,Prospección,Aguilar Polimetalica,1,Argentina,,,,,,,La Rioja,46,TRUE
+30,Buen Augurio 2,-28.4139194,-68.98078,Litio,La Rioja,Prospección,Aguilar S.A.,1,Argentina,,,,,,,La Rioja,46,TRUE
+31,Buitrera,-41.04444444,-69.31972222,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+32,Caballos,-28.224094,-69.324542,Cobre,La Rioja,Exploración inicial,Hanaq Group,1,China,,,,,,,La Rioja,46,TRUE
+33,Cachi,-47.93833,-69.92332,Oro,Santa Cruz,Exploración inicial,Tres Cerros Exploraciones SRL,0.65,Argentina,NewPeak Metals Limited,0.35,Australia,,,,Santa Cruz,78,TRUE
+34,Calcatreu,-41.88306,-69.53333,Oro,Río Negro,Producción,Patagonia Gold,1,Canadá,-,-,-,-,-,-,Río Negro,62,TRUE
+35,Calderón-Calderoncito,-31.22801,-70.29946,Oro,San Juan,Exploración inicial,Fortescue  Ltd.,1,Australia,,,,,,,San Juan,70,TRUE
+36,California,-24.268,-66.493,Plomo,Salta,Exploración inicial,German Santiago,,,,,,,,,Salta,66,TRUE
+37,Caltrauna,-41.09935177,-68.13699886,Plata,Río Negro,Exploración inicial,Rio de Oro Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+38,Campamento,-22.319,-65.046,Hierro,Salta,Exploración inicial,Servicios Y Proyectos Mineros S.R.L.,1,Argentina,,,,,,,Salta,66,TRUE
+39,Candela II,-24.3149583,-67.5870555555555,Litio,Salta,Exploración inicial,Armory Mining Corp.,1,Canadá,,,,,,,Salta,66,TRUE
+40,Candelas,-25.47594,-67.14368,Litio,Catamarca,Evaluación Económica Preliminar,Galan Lithium Limited,1,Australia,-,-,-,-,-,-,Catamarca,10,TRUE
+41,Cangrejillos,-23.70593969,-66.14165029,Litio,Salta,Exploración avanzada,Lithium S. Corporation,1,Canadá,,,,,,,Salta,66,TRUE
+42,Cañadon Del Moro,-40.83333,-69.65,Plata,Río Negro,Exploración avanzada,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+43,Cap-Oeste,-47.94467,-70.45145,Oro,Santa Cruz,Producción,Patagonia Gold,0.95,Canadá,Fomicruz,0.05,-,-,-,-,Santa Cruz,78,TRUE
+44,Casposo,-31.21083,-69.62918,Oro,San Juan,Producción,Austral Gold Limited,1,Australia,-,-,-,-,,,San Juan,70,TRUE
+45,Castor Polux,-24.362,-66.828,Manganeso,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+46,Casualidad III,-26.016,-66.183,Cobre,Salta,Exploración inicial,Aguiar Ernesto Matin,,,,,,,,,Salta,66,TRUE
+47,Cateos,-40.457365,-70.188942,Litio,Neuquén,Prospección,,,,,,,,,,Neuquén,58,TRUE
+48,Cateos,-38.257306,-69.32361,Uranio,Neuquén,Prospección,,,,,,,,,,Neuquén,58,TRUE
+49,Catriel (Mari),-37.7936111,-67.9633333333333,Uranio,Río Negro,Exploración inicial,CNEA,1,Argentina,,,,,,,Río Negro,62,TRUE
+50,Cauchari,-23.72524,-66.81108,Litio,Jujuy,Prefactibilidad,Austroid Corp.,1,Estados Unidos,-,-,-,-,-,-,Jujuy,38,TRUE
+51,Cauchari Jv,-23.75738,-66.79067,Litio,Jujuy,Prefactibilidad,Rio Tinto Group,1,Reino Unido,,,,,,,Jujuy,38,TRUE
+52,Cauchari-Olaroz,-23.41623,-66.71316,Litio,Jujuy,Producción,Ganfeng Lithium Co. Ltd.,0.467,China,Lithium Argentina,0.448,Suiza,Jujuy Energia y Mineria,0.085,Argentina,Jujuy,38,TRUE
+53,Cazadero Grande,-27.4436,-68.129047,Litio,Catamarca,Exploración inicial,CAMYEN SE,1,Argentina,,,,,,,Catamarca,10,TRUE
+54,Centenario,-24.68115349,-66.61912636,Litio,Salta,Exploración avanzada,Lithium Power International Ltd.,1,Australia,,,,,,,Salta,66,TRUE
+55,Centenario,-24.845,-66.8,Oro,Salta,Exploración inicial,Chengxin Lithium Group. Co.,1,China,,,,,,,Salta,66,TRUE
+56,Centenario-Ratones,-25.09077,-66.81628,Litio,Salta,Producción,Eramet,1,Francia,,,,-,-,-,Salta,66,TRUE
+57,Cerro Amarillo,-35.27361,-70.15611,Cobre,Mendoza,Exploración inicial,Wincul S.A.,1,Argentina,,,,,,,Mendoza,50,TRUE
+58,Cerro Atajo,-27.332918,-66.456819,Cobre,Catamarca,Exploración avanzada,CAMYEN SE,1,Argentina,,,,,,,Catamarca,10,TRUE
+59,Cerro Blanco,-40.965,-67.845,Plata,Río Negro,Exploración inicial,,,,,,,,,,Río Negro,62,TRUE
+60,Cerro Choique,-40.88199,-67.84295,Oro,Río Negro,Exploración inicial,Trendix Mining SRL,1,Argentina,,,,,,,Río Negro,62,TRUE
+61,Cerro Gordo,-24.716,-66.437,Oro,Salta,Exploración inicial,Cascadero Minerals S.A.,,,,,,,,,Salta,66,TRUE
+62,Cerro Juncal,-24.767,-66.769,Oro,Salta,Exploración inicial,Minera Cerro Juncal S.A.,,,,,,,,,Salta,66,TRUE
+63,Cerro Moro,-48.11,-66.65,Oro,Santa Cruz,Producción,Pan American Silver Corp,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+64,Cerro Negro,-46.90743,-70.22152,Oro,Santa Cruz,Producción,Newmont Goldcorp,1,Estados Unidos,-,-,-,-,-,-,Santa Cruz,78,TRUE
+65,Cerro Negro,-24.862,-66.663,Cobre,Salta,Exploración inicial,Hanaq Group,1,China,,,,,,,Salta,66,TRUE
+66,Cerro Peñón,-25.31234166,-68.40613333,Oro,Catamarca,Prospección,Elevado Gold,1,Australia,,,,,,,Catamarca,10,TRUE
+67,Cerro Samenta,-24.91,-68.102,Cobre,Salta,Exploración inicial,Geoterra S.R.L.,1,Argentina,,,,,,,Salta,66,TRUE
+68,Cerro Socompa,-24.395,-68.145,Cobre,Salta,Exploración avanzada,Rodriguez Silvia Rene,,,,,,,,,Salta,66,TRUE
+69,Cerro Solo,-43.37,-68.688,Uranio,Chubut,Exploración avanzada,CNEA,1,Argentina,-,-,-,-,-,-,Chubut,26,TRUE
+70,Cerro Vanguardia,-48.39861,-68.29083,Oro,Santa Cruz,Producción,AngloGold Ashanti plc,0.925,Sudáfrica,Fomicruz,0.075,Argentina,-,-,-,Santa Cruz,78,TRUE
+71,Chachas,-24.248,-67.329,Cobre,Salta,Exploración avanzada,Minera El Toro S.A.,,,,,,,,,Salta,66,TRUE
+72,Chihuidos,-37.8417,-69.45,Uranio,Neuquén,Exploración inicial,Blue Sky Uranium Corp.,1,Canadá,,,,,,,Neuquén,58,TRUE
+73,Cienaga Grande,-24.9,-66.627,Manganeso,Salta,Exploración inicial,Lazarte Luis Gabriel,,,,,,,,,Salta,66,TRUE
+74,Claudia,-48.56447,-68.10213,Oro,Santa Cruz,Exploración avanzada,Mirasol Resources Ltda.,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+75,Co. Abanico,-40.926,-68.262,Molibdeno,Río Negro,Exploración inicial,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+76,Co. La Mina,-40.896,-68.168,Plata,Río Negro,Exploración inicial,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+77,Coipita,-30.8986,-70.15645,Cobre,San Juan,Exploración inicial,Teck Resources Ltda.,0.8,Canadá,AbraSilver Corp.,0.2,Canadá,-,-,-,San Juan,70,TRUE
+78,Conserrat,-48.2978,-68.53819,Oro,Santa Cruz,Exploración avanzada,Unico Silver Ltda.,1,Australia,,,,-,-,-,Santa Cruz,78,TRUE
+79,Corcovo,-35.5,-69.75,Uranio,Mendoza,Exploración inicial,Blue Sky Uranium Corp.,1,Canadá,,,,,,,Mendoza,50,TRUE
+80,Córdoba,-22.43,-66.34,Oro,Jujuy,Producción,Sociedad Minera Santa Maria S.A.,1,Argentina,-,-,-,-,-,-,Jujuy,38,TRUE
+81,Cristal,-41.134,-68.672,Plata,Río Negro,Prospección,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+82,Custodio (San Martin Salamanca),-25.174,-65.805,Cobre,Salta,Exploración inicial,Ekeko S.A,,,,,,,,,Salta,66,TRUE
+83,Cuya,-40.98916667,-68.38583333,Plata,Río Negro,Exploración inicial,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+84,Diablillos,-25.27349,-66.81259,Plata,Catamarca - Salta,Factibilidad,AbraSilver Resources Corp,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+85,Diana (La Torca),-24.431,-66.309,Plomo,Salta,Exploración avanzada,Cardero Argentina S.A.,,,,,,,,,Salta,66,TRUE
+86,Distrito Gonzalito,-41.29,-65.75,Plomo,Río Negro,Exploración inicial,Trendix Mining SRL,1,Argentina,,,,,,,Río Negro,62,TRUE
+87,Don Julio,-30.51674,-69.7068,Oro,San Juan,Exploración avanzada,South32 ltd.,0.65,Australia,Sable Resources Ltd.,0.35,Canadá,-,-,-,San Juan,70,TRUE
+88,Don Nicolás,-47.93368,-67.45171,Oro,Santa Cruz,Producción,Cerrado Gold Inc.,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+89,Don Otto,-25.611,-65.927,Uranio,Salta,Factibilidad,CNEA,1,Argentina,,,,,,,Salta,66,TRUE
+90,Don Sixto,-36.29308,-68.45586,Oro,Mendoza,Exploración avanzada,Pan American Silver Corp,1,Canadá,-,-,-,-,-,-,Mendoza,50,TRUE
+91,Doncella,-24.787,-68.004,Litio,Salta,Exploración avanzada,Hanaq Group,1,China,,,,,,,Salta,66,TRUE
+92,Dos Lagunas,-40.916,-67.958,Plata,Río Negro,Exploración inicial,Trendix Mining SRL,1,Argentina,,,,,,,Río Negro,62,TRUE
+93,El Abra,-24.273,-66.472,Antimonio,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+94,El Acay,-24.408,-66.176,Plomo,Salta,Exploración inicial,Southern Cross Britania Lta.,,Reino Unido,,,,,,,Salta,66,TRUE
+95,El Bagual,-40.406,-67.949,Plata,Río Negro,Exploración inicial,,,,,,,,,,Río Negro,62,TRUE
+96,El Chorro,-24.933,-64.808,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+97,El Dorado Monserrat,-48.40667,-68.60556,Oro,Santa Cruz,Exploración avanzada,Fredonia Mining Inc.,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+98,El Duende,-41.933,-69.176,Plata,Río Negro,Prospección,Patagonia Gold,1,Canadá,,,,,,,Río Negro,62,TRUE
+99,El Fierro,-29.45117,-69.47948,Plata,San Juan,Exploración inicial,Sable Resources Ltd.,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+100,El Mago,-40.328,-67.827,Oro,Río Negro,Prospección,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+101,El Morro,-41.286,-65.833,Plata,Río Negro,Exploración inicial,Patagonia Gold,1,Canadá,,,,,,,Río Negro,62,TRUE
+102,El Nazareno,-22.512,-65.093,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+103,El Pachón,-31.744,-70.431,Cobre,San Juan,Factibilidad,Glencore Plc.,1,Suiza,-,-,-,-,-,-,San Juan,70,TRUE
+104,El Pantano,-47.90065,-68.5027305555555,Oro,Santa Cruz,Exploración inicial,Orosur Mining Inc.,0.5,Canadá,Deseado Dorado S. A. S.,0.5,Argentina,,,,Santa Cruz,78,TRUE
+105,El Peñon,-24.832,-66.31,Wolframio,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+106,El Quevar,-24.321178,-66.814928,Plata,Salta,Evaluación Económica Preliminar,Argenta Silver Corp.,1,Canadá,,,,-,-,-,Salta,66,TRUE
+107,El Quirusillal,-22.486,-65.11,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+108,El Rosillo,-41.14835,-70.16163,Plata,Río Negro,Exploración inicial,Unico Silver Ltda.,1,Australia,,,,,,,Río Negro,62,TRUE
+109,El Salto,-24.961,-64.831,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+110,El Zanjón,-48.76443,-67.95911,Oro,Santa Cruz,Prospección,Rugby Resources Ltd.,1,Canadá,,,,,,,Santa Cruz,78,TRUE
+111,Elena,-25.029,-67.425,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+112,Emilia (Vicuña),-24.16,-66.401,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+113,Emma Olga,-25.133,-66.401,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+114,Encrucijada,-24.287,-66.182,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+115,Escondido,-41.75416667,-69.92527778,Plata,Río Negro,Exploración inicial,Patagonia Gold,1,Canadá,,,,,,,Río Negro,62,TRUE
+116,Esperanza,-40.35944444,-68.39805556,Plata,Río Negro,Exploración inicial,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+117,Esperanza (ex Chacabuco),-22.743,-65.215,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+118,Esperanza Ii,-41.317,-65.717,Plomo,Río Negro,Prospección,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+119,Esperanza y Huachi,-29.92,-68.8547222222222,Oro,San Juan,Exploración inicial,Latin Metals Inc.,1,Canadá,,,,,,,San Juan,70,TRUE
+120,Estela (Elsa),-24.499,-66.026,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+121,Esther (Farallones),-24.278,-66.463,Antimonio,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+122,Ex mina Frusso,-24.331,-67.683,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+123,Farallón Negro,-27.3079,-66.67527,Oro,Catamarca,Producción,YMAD,1,Argentina,-,-,-,-,-,-,Catamarca,10,TRUE
+124,Fenix,-25.3927,-67.04878,Litio,Catamarca,Producción,Rio Tinto Group,1,Reino Unido,-,-,-,-,-,-,Catamarca,10,TRUE
+125,Fierro,-41.43361111,-65.29027778,Hierro,Río Negro,Prospección,Argentina Lithium & Energy Corp.,1,Canadá,,,,,,,Río Negro,62,TRUE
+126,Filo de Las Vicuñas,-27.625592,-68.494164,Oro,Catamarca,Exploración inicial,CAMYEN SE,1,Argentina,,,,,,,Catamarca,10,TRUE
+127,Filo Del Sol,-28.49471,-69.662,Cobre,San Juan,Prefactibilidad,Lundin Mining Corporation,0.5,Canadá,BHP Group Corp.,0.5,Australia,-,-,-,San Juan,70,TRUE
+128,Finca El Toro,-24.183,-65.855,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+129,Flammarion,-24.17,-66.412,Plomo,Salta,Exploración avanzada,Hanaq Group,1,China,,,,,,,Salta,66,TRUE
+130,Formentera-Cilón,-23.39751,-66.98014,Litio,Jujuy,Exploración inicial,Patagonia Lithium,1,Australia,,,,,,,Jujuy,38,TRUE
+131,Francisco Cornejo,-24.365,-66.036,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+132,Gallego,-25.03,-67.01,Litio,Salta,Exploración avanzada,Everlight Resources,1,Australia,,,,,,,Salta,66,TRUE
+133,Gran Mascasin,-31.7096638,-66.7770111,Litio,La Rioja,Prospección,Litios LRJ S.A.,1,Argentina,,,,,,,La Rioja,46,TRUE
+134,Gualcamayo / Carbonatos Profundos,-29.72,-68.629,Oro,San Juan,Producción,Eris LLC,1,Estados Unidos,-,-,-,-,-,-,San Juan,70,TRUE
+135,Hierro Indio,-35,-69.783333,Hierro,Mendoza,Exploración avanzada,Orvana Minerals Corp,,,,,,,,,Mendoza,50,TRUE
+136,Hombre Muerto Norte,-25.22556,-66.98187,Litio,Salta,Evaluación Económica Preliminar,POSCO Holdings Inc.,1,Corea del Sur,,,,-,-,-,Salta,66,TRUE
+137,Hombre Muerto Oeste,-25.4099951,-67.2450136,Litio,Catamarca,Construcción,Galan Lithium Limited,1,Australia,-,-,-,-,-,-,Catamarca,10,TRUE
+138,Hombre Muerto,-25.534896,-67.10699,Litio,Catamarca,Prospección,Pan American Energy,1,Argentina,,,,,,,Catamarca,10,TRUE
+139,Hope,-44.275,-67.0475,Uranio,Chubut,Prospección,,,,,,,,,,Chubut,26,TRUE
+140,Hortencia,-24.282,-67.667,Cobre,Salta,Exploración inicial,Ganfeng Lithium Co. Ltd.,,,,,,,,,Salta,66,TRUE
+141,Huaico Hondo,-24.479,-66.191,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+142,Hualilán,-30.73193,-68.95328,Oro,San Juan,Producción,Challenger Gold Ltda.,1,Australia,-,-,-,-,-,-,San Juan,70,TRUE
+143,Huemules,-36.1539145,-69.2049679,Uranio,Mendoza,Exploración inicial,Jaguar Uranium Corp.,1,Canadá,,,,,,,Mendoza,50,TRUE
+144,Inca,-24.34,-65.911,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+145,Inca Viejo,-25.145,-66.761,Oro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+146,Incachule,-24.267,-66.46,Manganeso,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+147,Incahuasi,-26.35584,-67.64756,Litio,Catamarca,Exploración inicial,Argentina Lithium & Energy Corp.,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+148,Incahuasi,-24.15033754,-67.53405109,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+149,Incahuasi,-24.362,-65.914,Oro,Salta,Exploración inicial,Cascadero Minerals S.A.,0.5,,N/A,0.5,,,,,Salta,66,TRUE
+150,Incahuasi Moncho,-24.24349093,-67.56645623,Litio,Salta,Exploración avanzada,Ganfeng Lithium Co. Ltd.,1,China,,,,,,,Salta,66,TRUE
+151,Incauca,-25.166,-66.401,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+152,Interceptor,-27.68537,-68.29215,Cobre,Catamarca,Prospección,NGEx Minerals Ltd.,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+153,Ivana (Amarillo Grande),-39.61437,-67.22486,Uranio,Río Negro,Evaluación Económica Preliminar,Ivana Minerales S.A.,1,Argentina,-,-,-,-,-,-,Río Negro,62,TRUE
+154,Jaguelíto,-29.77222,-69.6375,Oro,San Juan,Exploración inicial,Corporación América,1,Argentina,-,-,-,-,-,-,San Juan,70,TRUE
+155,Josemaria,-28.43583,-69.54861,Cobre,San Juan,Construcción,Lundin Mining Corporation,0.5,Canadá,BHP Group,0.5,Australia,-,-,-,San Juan,70,TRUE
+156,Juramento,-25.221,-65.112,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+157,Kachi,-26.49883,-67.42899,Litio,Catamarca,Factibilidad,Lake Resources NL,0.75,Australia,Lilac Solutions Inc.,0.25,Estados Unidos,-,-,-,Catamarca,10,TRUE
+158,Kaia,-41.39638889,-69.41694444,Uranio,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+159,Karachi Salar Escondido,-26.378105,-67.4459527,Litio,Catamarca,Prospección,Lithium South,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+160,La Ciénaga,-22.389,-65.073,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+161,La Colorada,-24.2475,-66.24944,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+162,La Diez,-28.4452027,-66.65041,Litio,La Rioja,Prospección,Udine S.A.,1,Argentina,,,,,,,La Rioja,46,TRUE
+163,La Esperanza,-40.2725,-68.24111111,Plata,Río Negro,Exploración inicial,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+164,La Esperanza,-24.242,-66.487,Plomo,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+165,La Josefina,-47.86613,-69.37623,Oro,Santa Cruz,Exploración avanzada,Patagonia Gold,0.95,Canadá,Fomicruz,0.05,Argentina,-,-,-,Santa Cruz,78,TRUE
+166,La Luz - Ivan Trend,-40.649,-68.437,Plomo,Río Negro,Exploración inicial,Trendix Mining SRL,1,Argentina,,,,,,,Río Negro,62,TRUE
+167,La Manchuria,-48.15831,-69.89174,Oro,Santa Cruz,Exploración avanzada,Astra Exploration,0.9,Canadá,Fomicruz,0.1,Argentina,-,-,-,Santa Cruz,78,TRUE
+168,La Niquelina,-22.347,-65.221,Niquel,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+169,La Ortiga,-28.79747,-69.4495,Cobre,San Juan,Exploración avanzada,Barrick Mining Corporation,1,Canadá,,,,-,-,-,San Juan,70,TRUE
+170,La Poma (La negra),-24.241,-66.485,Plomo,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+171,La Poma I,-24.438,-66.303,Plomo,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+172,"La Porfiada (Don Eusebio, Don Marcos, Magnetita)",-24.336,-65.849,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+173,La Providencia,-23.26139,-66.80083,Plata,Jujuy,Producción,Hanaq Group,1,China,-,-,-,-,-,-,Jujuy,38,TRUE
+174,La Victoria,-24.792,-68.061,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+175,Lago Seco,-44.3777778,-67.3202777777777,Uranio,Chubut,Prospección,,,,,,,,,,Chubut,26,TRUE
+176,Laguna Amarilla,-40.905,-67.949,Plata,Río Negro,Exploración inicial,Rio de Oro Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+177,Laguna Colorada,-43.91,-68.67,Uranio,Chubut,Exploración avanzada,CNEA,1,Argentina,-,-,-,-,-,-,Chubut,26,TRUE
+178,Laguna Salada,-44.29626,-67.21681,Uranio,Chubut,Evaluación Económica Preliminar,Jaguar Uranium Corp.,1,Canadá,-,-,-,-,-,-,Chubut,26,TRUE
+179,Laguna Verde (La Borita),-25.35885,-67.4804,Litio,Catamarca,Exploración avanzada,Ultra Lithium Inc.,1,Canadá,,-,,-,-,-,Catamarca,10,TRUE
+180,Lagunitas (Sepultura),-23.891,-66.249,Oro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+181,Lama,-29.32967,-69.98827,Oro,San Juan,Exploración avanzada,Barrick Mining Corporation,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+182,"Lara (San Antonio, San Jose, TOro Negro)",-25.683,-65.366,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+183,Las Calandrias,-47.60674,-67.51792,Oro,Santa Cruz,Producción,Cerrado Gold Inc.,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+184,Las Flechas (Northern Properties),-28.69573,-69.56335,Cobre,San Juan,Exploración inicial,Pan American Silver Corp,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+185,Las Opeñas,-29.77819,-69.34561,Oro,San Juan,Exploración inicial,NewPeak Metals Limited,1,Australia,-,-,-,-,-,-,San Juan,70,TRUE
+186,Las Vertientes,-25.027,-67.306,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+187,"Leo, Tiger, Panther",-24.933,-67.833,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+188,Leoncito,-28.7210036,-68.987227,Litio,La Rioja,Exploración inicial,Kallpa,1,Argentina,,,,,,,La Rioja,46,TRUE
+189,Libanesa,-47.80952,-66.78605,Oro,Santa Cruz,Exploración inicial,Mirasol Resources Ltda.,1,Canadá,,,,,,,Santa Cruz,78,TRUE
+190,Limeca,-23.685,-66.343,Zinc,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+191,Lindero,-25.09772,-67.75905,Oro,Salta,Producción,Fortuna Mining Corp.,1,Canadá,-,-,-,-,-,-,Salta,66,TRUE
+192,Lipetren,-41.93041667,-69.76333333,Litio,Río Negro,Prospección,Condor Prospecting S.A.,,,,,,,,,Río Negro,62,TRUE
+193,"Litio Gold I, Ii Y Iii",-25.364331,-66.625364,Litio,Catamarca,Prospección,Franklin Mining,1,Estados Unidos,,,,,,,Catamarca,10,TRUE
+194,Lonco Vaca - Palenque,-40.229,-69.212,Plata,Río Negro,Prospección,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+195,Los Azules,-31.08139,-70.16865,Cobre,San Juan,Factibilidad,McEwen Inc.,0.463,Canadá,Stellantis,0.182,Países Bajos,Otros,0.355,-,San Juan,70,TRUE
+196,Los Cardones,-25.936,-66.177,Cobre,Salta,Exploración inicial,Humboldt Minerals Ltd.,1,Reino Unido,,,,,,,Salta,66,TRUE
+197,Los Colorados,-24.832,-66.912,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+198,Los Sapitos,-28.851896,-69.144894,Litio,San Juan,Exploración inicial,Origen Resources Inc.,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+199,Lucho,-40.597,-66.232,Plata,Río Negro,Prospección,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+200,Lucho U,-40.51,-66.252,Uranio,Río Negro,Prospección,Lucero Claudio Guillermo-Unipersonal,1,Argentina,,,,,,,Río Negro,62,TRUE
+201,Lucrecita,-24.275,-66.067,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+202,Lunahuasi,-28.4196,-69.6226,Cobre,San Juan,Exploración inicial,NGEx Minerals Ltd.,1,Canadá,,,,,,,San Juan,70,TRUE
+203,Manantial Espejo (Cose),-48.76667,-69.5,Plata,Santa Cruz,Cese de operaciones,Pan American Silver Corp,1,Canadá,-,-,-,-,-,-,Santa Cruz,78,TRUE
+204,Manantiales,-31.16414,-69.69253,Oro,San Juan,Exploración inicial,Austral Gold Limited,1,Australia,-,-,-,-,-,-,San Juan,70,TRUE
+205,Maquinchao,-41.282,-68.653,Plata,Río Negro,Exploración inicial,Golden Arrow Resources Corp.,1,Canadá,,,,,,,Río Negro,62,TRUE
+206,Mara,-27.376,-66.283,Cobre,Catamarca,Factibilidad,Glencore Plc.,1,Suiza,,,,,,,Catamarca,10,TRUE
+207,Marcelo,-24.306,-67.32,Cobre,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+208,Margarita (Zorriquin),-25.966,-65.666,Cobre,Salta,Prospección,"Cardero Resource Corp,",1,Canadá,,,,,,,Salta,66,TRUE
+209,Maria Elena (Azul Las Coyas),-25.933,-65.709,Cobre,Salta,Prospección,"Cardero Resource Corp,",1,Canadá,,,,,,,Salta,66,TRUE
+210,Mariana,-24.81373,-68.30736,Litio,Salta,Producción,Ganfeng Lithium Co. Ltd.,1,China,,,,-,,-,Salta,66,TRUE
+211,Martín Bronce,-24.40305,-64.49939,Cobre,Jujuy,Producción,MOM Mining SRL,1,Argentina,,,,,,,Jujuy,38,TRUE
+212,Matacillas,-23.925,-66.269,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+213,Menucos,-41.031,-67.939,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+214,Meseta Central,-43.41,-68.69,Uranio,Chubut,Exploración avanzada,UrAmérica Ltd.,1,Reino Unido,-,-,-,-,-,-,Chubut,26,TRUE
+215,Meseta Sirven (Laguna Sirve),-46.8810783,-69.0676926,Uranio,Santa Cruz,Exploración inicial,CNEA,,Argentina,Fomicruz S.E,,,,,,Santa Cruz,78,TRUE
+216,Michelle,-48.34265,-68.50223,Oro,Santa Cruz,Exploración avanzada,AngloGold Ashanti plc,1,Sudáfrica,,,,,,,Santa Cruz,78,TRUE
+217,Milagro,-24.46,-66.197,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+218,Mina Beatriz,-26.16018,-67.42908,Litio,Catamarca,Exploración avanzada,Carachi Pampa Lithium Limited Partnership,1,Canadá,,,,,,,Catamarca,10,TRUE
+219,Mina Catalina Ii,-22.58405189,-66.34787963,Oro,Jujuy,Producción,Espíritu de los Andes S.A.,1,Argentina,,,,,,,Jujuy,38,TRUE
+220,Mina Martha,-48.69393,-69.69886,Plata,Santa Cruz,Reingeniería,Patagonia Gold,0.95,Canadá,Fomicruz,0.05,Argentina,-,-,-,Santa Cruz,78,TRUE
+221,Mina Sisifo - Mina Patilla,-24.23533,-67.51665,Litio,Salta,Exploración avanzada,Power Minerals Ltda.,1,Australia,-,-,-,-,-,-,Salta,66,TRUE
+222,Minas Futuro,-26.8494,-67.796351,Cobre,Catamarca,Exploración inicial,Southern Copper Corp.,1,Estados Unidos,,,,,,,Catamarca,10,TRUE
+223,Mogotes (Filo Sur),-28.605,-69.626667,Cobre,San Juan,Exploración avanzada,Mogotes Metals Inc.,1,Canadá,,,,,,,San Juan,70,TRUE
+224,Mosquito,-48.04962,-66.74309,Oro,Santa Cruz,Exploración avanzada,Hochschild Mining plc,1,Reino Unido,,,,,,,Santa Cruz,78,TRUE
+225,Navidad,-42.415,-68.82,Plata,Chubut,Evaluación Económica Preliminar,Pan American Silver Corp,1,Canadá,-,-,-,-,-,-,Chubut,26,TRUE
+226,Negra Muerta,-24.211,-66.2,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+227,Nivaldo,-28.396383,-69.5568777,Cobre,La Rioja,Exploración inicial,Minera Pedernales,1,Argentina,,,,,,,La Rioja,46,TRUE
+228,Olaroz,-23.45,-66.7,Litio,Jujuy,Producción,Rio Tinto Group,0.67,Reino Unido,Toyota Tsusho,0.25,Japón,Jujuy Energía y Minería,0.09,Argentina,Jujuy,38,TRUE
+229,Organullo,-24.395,-66.318,Plomo,Salta,Exploración avanzada,Latin Metals Inc.,1,Canadá,,,,,,,Salta,66,TRUE
+230,Pancho Arias,-24.266,-65.852,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+231,Paredes,-41.286,-70.165,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+232,Parmense Viscachani,-22.405,-65.124,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+233,Peñas Negras,-28.26814,-69.47581,Cobre,La Rioja,Exploración inicial,Sendero Resources Ltd.,1,Canadá,,,,,,,La Rioja,46,TRUE
+234,Picaso,-40.673,-69.579,Plata,Río Negro,Prospección,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+235,Pilahué,-40.62,-69.767,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+236,"Distrito Pingüino (Sa. Blanca, Plara León, Cerro Leòn, Pinguino)",-48.01789,-68.67303,Plata,Santa Cruz,Exploración avanzada,Unico Silver Ltda.,1,Australia,-,-,-,-,-,-,Santa Cruz,78,TRUE
+237,Piuquenes,-31.45390916,-70.4920555,Cobre,San Juan,Exploración inicial,Andina Copper Corp.,0.8,Canadá,Compañía Minera Piuquenes S.A.,0.2,Argentina,-,-,-,San Juan,70,TRUE
+238,Plateada,-24.657,-65.783,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+239,Pocitos I,-24.495,-67.0327777777777,Litio,Salta,Exploración avanzada,American Salars Lithium Inc.,1,Canadá,,,,,,,Salta,66,TRUE
+240,Poscaya,-22.456,-65.061,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+241,Potrerillos,-29.36999,-69.85988,Oro,San Juan,Exploración avanzada,Golden Arrow Resources Corp.,1,Canadá,,,,,,,San Juan,70,TRUE
+242,Pozuelos Pastos-Grandes,-24.69897,-66.81781,Litio,Salta,Factibilidad,Ganfeng Lithium Co. Ltd.,0.67,China,Lithium Argentina,0.33,Suiza,-,-,-,Salta,66,TRUE
+243,Prospecto Arizaro,-25.104,-67.756,Cobre,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+244,Prospecto Las Burras,-24.333,-65.87,Cobre,Salta,Exploración inicial,Cascadero Copper Corp.,0.7,Canadá,Regberg Ltd.,0.3,,,,,Salta,66,TRUE
+245,Pular (Salta Lithium),-24.401,-67.083,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+246,Puna Operation (Chinchillas - Pirquitas),-22.50508,-66.25685,Plata,Jujuy,Producción,SSR Mining Inc.,1,Estados Unidos,-,-,-,-,-,-,Jujuy,38,TRUE
+247,Punilla,-24.802,-64.744,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+248,Puzzle,-40.712,-68.26,Oro,Río Negro,Exploración inicial,Valcheta Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+249,Recuerdo,-24.175,-66.405,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+250,Reina Sofia Iv,-24.39558583,-67.02177048,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+251,Rincón,-24.20374,-66.99009,Litio,Salta,Construcción,Argosy Minerals,1,Australia,-,-,-,-,-,-,Salta,66,TRUE
+252,Rincón Oeste,-24.0480583,-67.220975,Litio,Salta,Exploración avanzada,Argentina Lithium & Energy Corp.,1,Canadá,,,,,,,Salta,66,TRUE
+253,Rincón (Salta Lithium),-24.1127,-67.17265,Litio,Salta,Evaluación Económica Preliminar,Power Minerals Ltda.,1,Australia,,,,,,,Salta,66,TRUE
+254,Rincones De Araya,-31.22801,-70.29946,Cobre,San Juan,Exploración inicial,Fortescue  Ltd.,1,Australia,-,-,-,-,-,-,San Juan,70,TRUE
+255,Rio Blanco,-22.261,-65.015,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+256,Rio Cenicero,-31.55608,-70.47163,Cobre,San Juan,Exploración avanzada,Aldebaran Resources Inc.,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+257,Rio Grande,-25.03228,-67.86679,Cobre,Salta,Exploración avanzada,Aldebaran Resources Inc.,1,Canadá,-,-,-,-,-,-,Salta,66,TRUE
+258,Rio Grande,-24.978,-68.154,Litio,Salta,Evaluación Económica Preliminar,Noa Lithium Brines Inc.,1,Canadá,,,,,,,Salta,66,TRUE
+259,Rio Grande,-25.00605,-68.14443,Litio,Salta,Exploración avanzada,Pluspetrol Resources Corp.,1,Paises Bajos,-,-,-,-,-,-,Salta,66,TRUE
+260,Rio Grande Sur,-25.0688611,-68.2074111111111,Litio,Salta,Prefactibilidad,Pursuit Minerals Ltd.,1,Australia,,,,,,,Salta,66,TRUE
+261,Rio Salinas,-31.35185325,-70.3773304,Cobre,San Juan,Exploración avanzada,Fortescue  Ltd.,1,Australia,-,-,-,-,-,-,San Juan,70,TRUE
+262,Rosario,-24.503,-66.203,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+263,Sal de Los Ángeles,-25.24472,-66.74833,Litio,Salta,Construcción,Revotech Asia Ltda.,0.46,China,Xizang Zhufeng Resources Co.,0.45,China,Leading Resources Global Ltd.,0.09,Reino Unido,Salta,66,TRUE
+264,Sal de Oro,-25.22426,-66.96852,Litio,Catamarca - Salta,Producción,POSCO Holdings Inc.,1,Corea del Sur,-,-,-,-,-,-,Salta,66,TRUE
+265,Sal de Vida,-25.34532,-66.94715,Litio,Catamarca,Construcción,Rio Tinto Group,1,Reino Unido,-,-,-,-,-,-,Catamarca,10,TRUE
+266,Salar de Antofalla I Al Xiii Y Bolland Vi,-25.866666,-67.85,Litio,Catamarca,Exploración avanzada,Albemarle Corporation,1,Estados Unidos,,,,,,,Catamarca,10,TRUE
+267,Salar del Rincón,-24.0575,-67.12,Litio,Salta,Construcción,Rio Tinto Group,1,Reino Unido - Australia,-,-,-,-,-,-,Salta,66,TRUE
+268,Salar Tolillar,-25.03672,-67.12411,Litio,Salta,Evaluación Económica Preliminar,Alpha Lithium Corporation,1,Canadá,-,-,-,-,-,-,Salta,66,TRUE
+269,Salari,-24.72490657,-67.79769983,Litio,Salta,Exploración avanzada,Eramet,1,Francia,,,,,,,Salta,66,TRUE
+270,Salari 22,-24.90458899,-67.69699741,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+271,San Antonio,-24.83,-66.324,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+272,San Antonio,-25.252,-66.402,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+273,San Antonio,-22.443,-65.276,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+274,San Esteban,-24.088,-66.104,Manganeso,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+275,San Francisco,-30.71945,-69.65445,Cobre,San Juan,Exploración inicial,Turmalina Metals,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+276,San Francisco (Vallecito),-25.894,-66.287,Cobre,Salta,Exploración inicial,Humboldt Minerals Ltd.,1,Reino Unido,,,,,,,Salta,66,TRUE
+277,San Isidro,-22.737,-65.229,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+278,San Jorge (PSJ Cobre Mendocino),-32.2448,-69.43887,Cobre,Mendoza,Prefactibilidad,Zonda Metals GmBH,0.9,Suiza,Grupo Alberdi,0.1,Argentina,-,-,-,Mendoza,50,TRUE
+279,San Jorge,-26.93886,-68.12172,Litio,Catamarca,Exploración inicial,Greenwing Resources Ltd,1,Australia,,,,,,,Catamarca,10,TRUE
+280,San José,-46.66848,-70.29747,Plata,Santa Cruz,Producción,Hochschild Mining Plc,0.51,Reino Unido,McEwen Mining Inc.,0.49,Canadá,,,-,Santa Cruz,78,TRUE
+281,San Jose de Chañi (Potrerillos),-24.196,-65.824,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+282,San Pedro (Cardonal),-24.341,-65.713,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+283,San Roque,-40.78585,-65.79743,Oro,Río Negro,Exploración avanzada,International Iconic Gold exploration corp,1,Canadá,-,-,-,-,-,-,Río Negro,62,TRUE
+284,San Roque,-24.295,-66.039,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+285,Santa Ines,-24.784,-68.144,Cobre,Salta,Exploración avanzada,Fuyang Mingjin New Energy Development Co,1,China,,,,,,,Salta,66,TRUE
+286,Sapo y otras,-37.803474,-69.415636,Cobre,Neuquén,Exploración avanzada,,,,,,,,,,Neuquén,58,TRUE
+287,Sascha,-47.808,-70.283,Oro,Santa Cruz,Exploración inicial,Pursuit Minerals Ltd.,1,Australia,,,,,,,Santa Cruz,78,TRUE
+288,Saturno,-24.478,-66.174,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+289,Señor del Milagro,-24.388,-66.022,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+290,Sierra Cuadrada,-44.609,-67.992,Uranio,Chubut,Prospección,CNEA,1,Argentina,,,,,,,Chubut,26,TRUE
+291,Sierra Grande,-41.677,-65.369,Hierro,Río Negro,Reingeniería,China Metallurgical Group Corporation,0.7,China,A GRADE TRADING LTD,0.3,Estados Unidos,-,-,-,Río Negro,62,TRUE
+292,Sierra Pintada,-34.9563,-68.6119,Uranio,Mendoza,Factibilidad,CNEA,1,Argentina,,,,,,,Mendoza,50,TRUE
+293,Silvina,-25,-67.849,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+294,Sincera,-26.05715833,-67.9349166,Litio,Catamarca,Exploración avanzada,Antofalla Minerals S.A (Marcelo López Acuña),,,,,,,,,Catamarca,10,TRUE
+295,Sofia,-46.86444,-68.84583,Uranio,Santa Cruz,Exploración inicial,Fomicruz S.E,,Argentina,Sophia Energy S.A.,,Argentina,,,,Santa Cruz,78,TRUE
+296,Jama - Solaroz,-23.54439,-66.62877,Litio,Jujuy,Exploración avanzada,CNGR Advanced Material,0.9,China,Hanaq,0.1,China,,,,Jujuy,38,TRUE
+297,Sor Rafaela,-24.333,-66.071,Cobre,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+298,Soroche y Vulcano,-25.129,-66.746,Plomo,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+299,Supay,-40.191,-68.08,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+300,Suyai,-42.89718,-71.21956,Oro,Chubut,Factibilidad,Pan American Silver Corp,0.6,Canadá,CAM,0.4,Argentina,-,-,-,Chubut,26,TRUE
+301,Taca Sal IV,-24.652159,-67.78915982,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+302,Taca Taca,-24.57255,-67.73582,Cobre,Salta,Factibilidad,First Quantum Minerals Ltd.,1,Canadá,-,-,-,-,-,-,Salta,66,TRUE
+303,Taguas,-29.20134,-69.87465,Oro,San Juan,Evaluación Económica Preliminar,Orvana Minerals Corp,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE
+304,Tamariscos,-41.517,-65.76,Plata,Río Negro,Exploración inicial,Patagonia Gold,1,Canadá,,,,,,,Río Negro,62,TRUE
+305,Tanque Negro,-40.832,-68.414,Plata,Río Negro,Prospección,Southern Copper Corp.,1,Estados Unidos,,,,,,,Río Negro,62,TRUE
+306,Taquetren,-41.68321,-69.60746,Plata,Río Negro,Prospección,Fitzroy Minerals Inc.,1,Canadá,,,,,,,Río Negro,62,TRUE
+307,Taron Cesium,-24.65,-66.5,Cesio,Salta,Evaluación Económica Preliminar,Cascadero Copper Corp.,1,Canadá,,,,,,,Salta,66,TRUE
+308,Tebenquicho Chico,-25.3352805,-67.53559,Oro,Catamarca,Exploración avanzada,Elevado Gold,1,Australia,,,,,,,Catamarca,10,TRUE
+309,Teresita,-41.162,-67.912,Plata,Río Negro,Exploración inicial,Rio de Oro Exploraciones,1,Argentina,,,,,,,Río Negro,62,TRUE
+310,Tolar Chico,-24.866,-67.083,Plata,Salta,Prospección,,,,,,,,,,Salta,66,TRUE
+311,Tornado-Huracán,-46.78715,-70.30633,Oro,Santa Cruz,Exploración inicial,Patagonia Gold,1,Canadá,,,,,,,Santa Cruz,78,TRUE
+312,Toruel,-41.006,-67.88,Plata,Río Negro,Exploración inicial,MIM Argentina Exploraciones S.A,1,Argentina,,,,,,,Río Negro,62,TRUE
+313,Tres Quebradas,-27.36413,-68.66513,Litio,Catamarca,Producción,Zijin Mining Group Ltd.,1,China,-,-,-,-,-,-,Catamarca,10,TRUE
+314,Trila Lea,-26.05864,-67.93053,Litio,Catamarca,Exploración avanzada,Triangle Lithium Argentina S.A,0.8,Argentina,Lithium Energi Exploration Inc,0.2,Canadá,,,,Catamarca,10,TRUE
+315,Unchimé,-24.685,-64.819,Hierro,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+316,Valcheta,-40.713,-66.495,Cobre,Río Negro,Exploración inicial,Trendix Mining SRL,1,Argentina,,,,,,,Río Negro,62,TRUE
+317,Valle Ancho,-27.583333,-68.833333,Oro,Catamarca,Exploración avanzada,NGEx Minerals Ltd.,1,Canadá,-,-,-,-,-,-,Catamarca,10,TRUE
+318,Valle de Chita,-30.55137,-69.52132,Cobre,San Juan,Exploración avanzada,South32 Ltd.,0.501,Australia,Minsud Resources Corp.,0.499,Canadá,-,-,-,San Juan,70,TRUE
+319,Vampiro (San Antonio),-24.982,-64.878,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+320,Vega de Arizaro,-24.51189488,-67.90665183,Litio,Salta,Exploración avanzada,,,,,,,,,,Salta,66,TRUE
+321,Veladero,-29.40026,-69.91594,Oro,San Juan,Producción,Barrick Mining Corporation,0.5,Canadá,Shandong Gold Mining Co. Ltd.,0.5,China,-,,-,San Juan,70,TRUE
+322,Veta Grande,-24.268,-66.473,Antimonio,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+323,Victoria,-24.269,-66.464,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+324,Victoria (La Revancha),-24.877,-65.335,Plomo,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+325,Vil Achay,-27.53,-67.265,Estaño,Catamarca,Exploración avanzada,Alto Grande S.A.,1,Argentina,,,,,,,Catamarca,10,TRUE
+326,Virgen Del Valle Litio,-25.4394,-66.97779722,Litio,Catamarca,Prospección,Minera Santa Rita S.R.L.,1,Argentina,-,-,-,-,-,-,Catamarca,10,TRUE
+327,Virginia,-47.46658,-69.94496,Plata,Santa Cruz,Exploración avanzada,Mirasol Resources Ltda.,1,Canadá,-,-,,-,-,-,Santa Cruz,78,TRUE
+328,Vista Alegre,-40.17055556,-69.68,Plata,Río Negro,Prospección,,,,,,,,,,Río Negro,62,TRUE
+329,Vizcacheral,-24.129,-65.882,Cobre,Salta,Exploración inicial,,,,,,,,,,Salta,66,TRUE
+330,Yanso,-29.9325528,-68.5414583333333,Oro,San Juan,Exploración avanzada,Golden Arrow Resources Corp.,1,Canadá,,,,,,,San Juan,70,TRUE
+331,Zancarron,-29.62237517,-69.9355613,Oro,San Juan,Exploración inicial,Barrick Mining Corporation,1,Canadá,-,-,-,-,-,-,San Juan,70,TRUE

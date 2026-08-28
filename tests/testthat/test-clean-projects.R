@@ -1,8 +1,9 @@
-if (file.exists("R/clean_projects.R")) {
-  source("R/clean_projects.R")
+source_path <- file.path("..", "..", "R", "clean_projects.R")
+if (file.exists(source_path)) {
+  source(source_path)
 }
 
-fixture_path <- "tests/fixtures/siacam_projects.csv"
+fixture_path <- file.path("..", "fixtures", "siacam_projects.csv")
 raw_projects <- utils::read.csv(
   fixture_path,
   check.names = FALSE,

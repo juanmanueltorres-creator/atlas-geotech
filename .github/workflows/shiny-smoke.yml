@@ -114,8 +114,7 @@ jobs:
           writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
 
           browser$screenshot(
-            filename = "artifacts/atlas-shiny.png",
-            format = "png"
+            filename = "artifacts/atlas-shiny.png"
           )
 
           if (!file.exists("artifacts/atlas-shiny.png") ||

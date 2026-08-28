@@ -106,6 +106,14 @@ read_argentina_provinces <- function(path_or_url) {
     stop("Argentina provinces GeoJSON did not produce an sf layer", call. = FALSE)
   }
 
+  if (!("nombre" %in% names(provinces)) && "nam" %in% names(provinces)) {
+    provinces$nombre <- as.character(provinces$nam)
+  }
+
+  if (!("id" %in% names(provinces)) && "in1" %in% names(provinces)) {
+    provinces$id <- as.character(provinces$in1)
+  }
+
   if (!("nombre" %in% names(provinces))) {
     stop("Argentina provinces GeoJSON is missing the 'nombre' field", call. = FALSE)
   }

@@ -24,6 +24,11 @@ jobs:
           r-version: '4.5'
           use-public-rspm: true
 
+      - name: Install geospatial system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev
+
       - name: Install test dependencies
         shell: Rscript {0}
         run: |
@@ -33,7 +38,8 @@ jobs:
             "stringr",
             "readr",
             "readxl",
-            "writexl"
+            "writexl",
+            "sf"
           ))
 
       - name: Run contract tests

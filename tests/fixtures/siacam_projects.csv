@@ -1,0 +1,4 @@
+N°,NOMBRE,LATITUD,LONGITUD,MINERAL PRINCIPAL,PROVINCIA,ESTADO,CONTROLANTE (1°),PORCENTAJE (1°),ORIGEN (1°),CONTROLANTE (2°),ORIGEN (2°),PORCENTAJE (2°),CONTROLANTE (3°),PORCENTAJE (3°),ORIGEN (3°)
+1,Proyecto Uno,-29.1000,-69.1000,Cobre,San Juan,Exploración,Empresa A,80%,Argentina,Empresa B,Canadá,20%,,,
+2,"  Proyecto Dos  ",-24.5000,-66.2000,"  Litio  ",Jujuy,Producción,Empresa C,100%,Argentina,,,,,,
+3,Proyecto Sin Mineral,-31.0000,-68.0000,,San Juan,Exploración,,,,,,,,,

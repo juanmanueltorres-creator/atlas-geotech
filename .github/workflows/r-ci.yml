@@ -39,7 +39,9 @@ jobs:
             "readr",
             "readxl",
             "writexl",
-            "sf"
+            "sf",
+            "shiny",
+            "leaflet"
           ))
 
       - name: Run contract tests

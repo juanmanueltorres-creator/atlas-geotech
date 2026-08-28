@@ -154,6 +154,9 @@ read_argentina_provinces <- function(path_or_url) {
   }
 
   if ("in1" %in% names(provinces)) {
+    if ("id" %in% names(provinces)) {
+      provinces$source_feature_id <- as.character(provinces$id)
+    }
     provinces$id <- as.character(provinces$in1)
   }
 

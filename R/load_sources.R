@@ -153,7 +153,7 @@ read_argentina_provinces <- function(path_or_url) {
     provinces$nombre <- as.character(provinces$nam)
   }
 
-  if (!("id" %in% names(provinces)) && "in1" %in% names(provinces)) {
+  if ("in1" %in% names(provinces)) {
     provinces$id <- as.character(provinces$in1)
   }
 

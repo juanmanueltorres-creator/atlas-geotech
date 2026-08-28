@@ -96,22 +96,24 @@ jobs:
             ))
           }
 
-          repaired <- tryCatch(
-            sf::st_make_valid(provinces),
+          planar <- sf::st_set_crs(provinces, NA)
+          geos_repaired <- tryCatch(
+            sf::st_make_valid(planar),
             error = function(error) error
           )
 
-          if (inherits(repaired, "error")) {
-            cat("st_make_valid candidate failed:", conditionMessage(repaired), "\n")
+          if (inherits(geos_repaired, "error")) {
+            cat("GEOS planar repair candidate failed:", conditionMessage(geos_repaired), "\n")
           } else {
-            repaired_reason <- sf::st_is_valid(repaired, reason = TRUE)
+            geos_repaired <- sf::st_set_crs(geos_repaired, 4326)
+            repaired_reason <- sf::st_is_valid(geos_repaired, reason = TRUE)
             repaired_invalid <- which(is.na(repaired_reason) | repaired_reason != "Valid Geometry")
-            repaired_types <- unique(as.character(sf::st_geometry_type(repaired)))
+            repaired_types <- unique(as.character(sf::st_geometry_type(geos_repaired)))
 
-            repaired_s2_errors <- lapply(seq_len(nrow(repaired)), function(index) {
+            repaired_s2_errors <- lapply(seq_len(nrow(geos_repaired)), function(index) {
               tryCatch(
                 {
-                  sf::st_within(probe_point, repaired[index, ])
+                  sf::st_within(probe_point, geos_repaired[index, ])
                   NULL
                 },
                 error = function(error) conditionMessage(error)
@@ -123,10 +125,10 @@ jobs:
               logical(1)
             ))
 
-            cat("st_make_valid candidate features:", nrow(repaired), "\n")
-            cat("st_make_valid candidate GEOS invalid:", length(repaired_invalid), "\n")
-            cat("st_make_valid candidate s2-invalid:", length(repaired_s2_invalid), "\n")
-            cat("st_make_valid candidate geometry types:", paste(repaired_types, collapse = ", "), "\n")
+            cat("GEOS planar repair candidate features:", nrow(geos_repaired), "\n")
+            cat("GEOS planar repair candidate GEOS invalid:", length(repaired_invalid), "\n")
+            cat("GEOS planar repair candidate s2-invalid:", length(repaired_s2_invalid), "\n")
+            cat("GEOS planar repair candidate geometry types:", paste(repaired_types, collapse = ", "), "\n")
           }
 
       - name: Refresh from official public sources

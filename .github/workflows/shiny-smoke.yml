@@ -93,7 +93,12 @@ jobs:
               returnByValue = TRUE
             )
 
-            marker_count <- as.integer(result$result$value %||% 0)
+            value <- result$result$value
+            if (is.null(value)) {
+              value <- 0L
+            }
+            marker_count <- as.integer(value)
+
             if (!is.na(marker_count) && marker_count > 0L) {
               break
             }

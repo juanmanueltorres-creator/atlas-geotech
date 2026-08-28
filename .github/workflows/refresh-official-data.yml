@@ -47,6 +47,53 @@ jobs:
             "sf"
           ))
 
+      - name: Diagnose official province geometry
+        shell: Rscript {0}
+        run: |
+          source("R/load_sources.R")
+          source("R/refresh_official_data.R")
+
+          provinces <- read_argentina_provinces(ATLAS_PROVINCES_URL)
+          cat("Province geometry diagnostic\n")
+          cat("features:", nrow(provinces), "\n")
+
+          geos_reason <- sf::st_is_valid(provinces, reason = TRUE)
+          geos_invalid <- which(is.na(geos_reason) | geos_reason != "Valid Geometry")
+
+          cat("GEOS invalid features:", length(geos_invalid), "\n")
+          if (length(geos_invalid) > 0) {
+            print(data.frame(
+              row = geos_invalid,
+              id = as.character(provinces$id[geos_invalid]),
+              nombre = as.character(provinces$nombre[geos_invalid]),
+              reason = geos_reason[geos_invalid],
+              stringsAsFactors = FALSE
+            ))
+          }
+
+          probe_point <- sf::st_sfc(sf::st_point(c(0, 0)), crs = 4326)
+          s2_errors <- lapply(seq_len(nrow(provinces)), function(index) {
+            tryCatch(
+              {
+                sf::st_within(probe_point, provinces[index, ])
+                NULL
+              },
+              error = function(error) conditionMessage(error)
+            )
+          })
+
+          s2_invalid <- which(vapply(s2_errors, function(value) !is.null(value), logical(1)))
+          cat("s2-invalid features:", length(s2_invalid), "\n")
+          if (length(s2_invalid) > 0) {
+            print(data.frame(
+              row = s2_invalid,
+              id = as.character(provinces$id[s2_invalid]),
+              nombre = as.character(provinces$nombre[s2_invalid]),
+              error = vapply(s2_errors[s2_invalid], identity, character(1)),
+              stringsAsFactors = FALSE
+            ))
+          }
+
       - name: Refresh from official public sources
         shell: Rscript {0}
         run: |

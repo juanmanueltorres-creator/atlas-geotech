@@ -50,6 +50,49 @@ read_siacam_xlsx <- function(path_or_url, sheet = 1) {
   )
 }
 
+repair_argentina_province_topology <- function(provinces) {
+  validity <- sf::st_is_valid(provinces)
+  invalid <- is.na(validity) | !validity
+
+  if (!any(invalid)) {
+    return(provinces)
+  }
+
+  original_crs <- sf::st_crs(provinces)
+
+  repaired <- tryCatch(
+    {
+      planar <- sf::st_set_crs(provinces, NA)
+      planar <- sf::st_make_valid(planar)
+      sf::st_set_crs(planar, original_crs)
+    },
+    error = function(error) {
+      stop(
+        sprintf(
+          "Unable to repair Argentina provinces GeoJSON topology: %s",
+          conditionMessage(error)
+        ),
+        call. = FALSE
+      )
+    }
+  )
+
+  repaired_validity <- sf::st_is_valid(repaired)
+  repaired_invalid <- is.na(repaired_validity) | !repaired_validity
+
+  if (any(repaired_invalid)) {
+    stop(
+      sprintf(
+        "Argentina provinces GeoJSON still contains %d invalid geometries after repair",
+        sum(repaired_invalid)
+      ),
+      call. = FALSE
+    )
+  }
+
+  repaired
+}
+
 read_argentina_provinces <- function(path_or_url) {
   if (!is.character(path_or_url) || length(path_or_url) != 1 || is.na(path_or_url) || path_or_url == "") {
     stop(
@@ -126,6 +169,8 @@ read_argentina_provinces <- function(path_or_url) {
   if (!identical(source_crs$epsg, 4326L)) {
     provinces <- sf::st_transform(provinces, 4326)
   }
+
+  provinces <- repair_argentina_province_topology(provinces)
 
   geometry_types <- unique(as.character(sf::st_geometry_type(provinces)))
   invalid_geometry_types <- setdiff(geometry_types, c("POLYGON", "MULTIPOLYGON"))

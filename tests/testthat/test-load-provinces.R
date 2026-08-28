@@ -54,14 +54,14 @@ if (exists("read_argentina_provinces", mode = "function")) {
     expect_equal(provinces$in1, "70")
   })
 
-  test_that("read_argentina_provinces prefers official IGN in1 over GeoJSON feature id", {
+  test_that("read_argentina_provinces prefers official IGN in1 over source feature id", {
     path <- tempfile(fileext = ".geojson")
     on.exit(unlink(path), add = TRUE)
 
     geojson <- paste0(
       '{"type":"FeatureCollection","features":[',
-      '{"type":"Feature","id":"provincia.56",',
-      '"properties":{"nam":"Santa Fe","in1":"82","sag":"IGN"},',
+      '{"type":"Feature",',
+      '"properties":{"id":"provincia.56","nam":"Santa Fe","in1":"82","sag":"IGN"},',
       '"geometry":{"type":"Polygon","coordinates":[[[',
       '-62,-34],[-60,-34],[-60,-32],[-62,-32],[-62,-34',
       ']]]}}]}'
@@ -73,6 +73,7 @@ if (exists("read_argentina_provinces", mode = "function")) {
     expect_equal(provinces$nombre, "Santa Fe")
     expect_equal(provinces$id, "82")
     expect_equal(provinces$in1, "82")
+    expect_equal(provinces$source_feature_id, "provincia.56")
   })
 
   test_that("read_argentina_provinces repairs invalid polygon topology before spatial use", {

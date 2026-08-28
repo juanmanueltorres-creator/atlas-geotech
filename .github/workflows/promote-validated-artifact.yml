@@ -1,0 +1,116 @@
+name: Promote validated Atlas artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: GitHub Actions run ID that produced atlas-official-processed
+        required: true
+        type: string
+  push:
+    branches:
+      - feat/atlas-minero-v0-data-spine
+    paths:
+      - .github/workflows/promote-validated-artifact.yml
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    env:
+      DEFAULT_RUN_ID: '33220270541'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve validated run
+        id: resolve
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run_id=${{ inputs.run_id }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_id=${DEFAULT_RUN_ID}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download validated artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf data/processed
+          mkdir -p data/processed
+          gh run download "${{ steps.resolve.outputs.run_id }}" \
+            --repo "${{ github.repository }}" \
+            --name atlas-official-processed \
+            --dir data/processed
+
+      - name: Validate promoted snapshot
+        shell: python
+        run: |
+          import csv
+          import json
+          from pathlib import Path
+
+          root = Path("data/processed")
+          required = [
+              root / "projects.csv",
+              root / "projects.geojson",
+              root / "metadata.csv",
+          ]
+
+          missing = [str(path) for path in required if not path.is_file() or path.stat().st_size == 0]
+          if missing:
+              raise SystemExit(f"Missing or empty promoted artifacts: {missing}")
+
+          with (root / "projects.csv").open(encoding="utf-8-sig", newline="") as handle:
+              csv_rows = list(csv.DictReader(handle))
+
+          with (root / "projects.geojson").open(encoding="utf-8") as handle:
+              geojson = json.load(handle)
+
+          with (root / "metadata.csv").open(encoding="utf-8-sig", newline="") as handle:
+              metadata_rows = list(csv.DictReader(handle))
+
+          features = geojson.get("features", [])
+          if not csv_rows or len(csv_rows) != len(features):
+              raise SystemExit(
+                  f"Project count mismatch: CSV={len(csv_rows)} GeoJSON={len(features)}"
+              )
+
+          project_ids = [row.get("project_id") for row in csv_rows]
+          if any(not project_id for project_id in project_ids):
+              raise SystemExit("Promoted snapshot contains missing project_id values")
+          if len(project_ids) != len(set(project_ids)):
+              raise SystemExit("Promoted snapshot contains duplicate project_id values")
+
+          for row in csv_rows:
+              lat = float(row["latitude"])
+              lon = float(row["longitude"])
+              if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+                  raise SystemExit(f"Out-of-range coordinate for {row['project_id']}")
+
+          if len(metadata_rows) != 2:
+              raise SystemExit(f"Expected 2 metadata rows, found {len(metadata_rows)}")
+
+          print(f"Validated {len(csv_rows)} promoted projects")
+          print(f"Province mismatches: {sum(row.get('province_match') == 'FALSE' for row in csv_rows)}")
+
+      - name: Commit processed snapshot
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/processed/projects.csv data/processed/projects.geojson data/processed/metadata.csv
+
+          if git diff --cached --quiet; then
+            echo "Validated snapshot already published; nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "data: publish validated official Atlas snapshot"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

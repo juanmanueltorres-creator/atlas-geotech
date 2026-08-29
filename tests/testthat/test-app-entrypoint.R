@@ -64,6 +64,36 @@ if (file.exists(app_path)) {
     expect_lt(canonicalize_line, companies_line)
   })
 
+  test_that("root app.R wires Capital analytics before the app builder", {
+    app_lines <- readLines(app_path, warn = FALSE)
+    summary_line <- grep(
+      'source("R/summarize_capital_origins.R", local = TRUE)',
+      app_lines,
+      fixed = TRUE
+    )
+    capital_map_line <- grep(
+      'source("R/capital_map.R", local = TRUE)',
+      app_lines,
+      fixed = TRUE
+    )
+    builder_line <- grep(
+      'source("R/build_atlas_app.R", local = TRUE)',
+      app_lines,
+      fixed = TRUE
+    )
+
+    expect_length(summary_line, 1L)
+    expect_length(capital_map_line, 1L)
+    expect_length(builder_line, 1L)
+
+    if (length(summary_line) == 1L && length(builder_line) == 1L) {
+      expect_lt(summary_line, builder_line)
+    }
+    if (length(capital_map_line) == 1L && length(builder_line) == 1L) {
+      expect_lt(capital_map_line, builder_line)
+    }
+  })
+
   test_that("root app.R builds a Shiny app from ATLAS_DATA_DIR", {
     directory <- tempfile("atlas-entrypoint-")
     on.exit(unlink(directory, recursive = TRUE), add = TRUE)
@@ -95,6 +125,18 @@ if (file.exists(app_path)) {
     expect_true(
       exists("extract_project_companies", envir = env, inherits = FALSE),
       info = "app.R must load the company extraction helper for production data"
+    )
+    expect_true(
+      exists("summarize_capital_origins", envir = env, inherits = FALSE),
+      info = "app.R must load the Capital aggregation helper for production data"
+    )
+    expect_true(
+      exists("atlas_capital_summary", envir = env, inherits = FALSE),
+      info = "app.R must load the Capital filter integration helper for production data"
+    )
+    expect_true(
+      exists("atlas_capital_table_data", envir = env, inherits = FALSE),
+      info = "app.R must load the Capital table presentation helper for production data"
     )
   })
 }

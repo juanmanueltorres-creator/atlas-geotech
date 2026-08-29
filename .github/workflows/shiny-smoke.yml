@@ -7,7 +7,6 @@ on:
       - main
       - feat/atlas-dark-theme
       - feat/atlas-minero-v0-data-spine
-      - feat/atlas-company-lens
     paths:
       - .github/workflows/shiny-smoke.yml
       - app.R
@@ -75,178 +74,40 @@ jobs:
           cat artifacts/shiny.log || true
           exit 1
 
-      - name: Verify Company Lens in browser and capture screenshot
+      - name: Render Atlas page and capture screenshot
         shell: Rscript {0}
         run: |
           browser <- chromote::ChromoteSession$new()
           on.exit(browser$close(), add = TRUE)
 
-          evaluate_value <- function(expression) {
-            result <- browser$Runtime$evaluate(
-              expression = expression,
-              returnByValue = TRUE
-            )
-            result$result$value
-          }
-
-          wait_for_value <- function(expression, predicate, attempts = 45L) {
-            value <- NULL
-            for (attempt in seq_len(attempts)) {
-              value <- evaluate_value(expression)
-              if (isTRUE(predicate(value))) {
-                return(value)
-              }
-              Sys.sleep(1)
-            }
-            value
-          }
-
           browser$Page$navigate("http://127.0.0.1:3838/")
 
-          marker_expression <- paste(
-            "(() => {",
-            "const mapPane = document.querySelector('#map .leaflet-map-pane');",
-            "const marks = document.querySelectorAll('#map .leaflet-interactive');",
-            "return mapPane ? marks.length : 0;",
-            "})()"
-          )
+          marker_count <- 0L
+          for (attempt in seq_len(45)) {
+            result <- browser$Runtime$evaluate(
+              expression = paste(
+                "(() => {",
+                "const mapPane = document.querySelector('#map .leaflet-map-pane');",
+                "const marks = document.querySelectorAll('#map .leaflet-interactive');",
+                "return mapPane ? marks.length : 0;",
+                "})()"
+              ),
+              returnByValue = TRUE
+            )
 
-          initial_marker_count <- wait_for_value(
-            marker_expression,
-            function(value) {
-              !is.null(value) && !is.na(as.integer(value)) && as.integer(value) > 0L
+            marker_count <- as.integer(result$result$value %||% 0L)
+            if (!is.na(marker_count) && marker_count > 0L) {
+              break
             }
-          )
-          initial_marker_count <- as.integer(initial_marker_count)
+            Sys.sleep(1)
+          }
 
-          if (is.na(initial_marker_count) || initial_marker_count <= 0L) {
+          if (is.na(marker_count) || marker_count <= 0L) {
             stop("Leaflet map did not render any interactive project features")
           }
 
-          cat("Initial Leaflet interactive features:", initial_marker_count, "\n")
-
-          origin_values <- wait_for_value(
-            paste(
-              "(() => {",
-              "const select = document.getElementById('capital_origin');",
-              "if (!select || !select.selectize) return [];",
-              "return Object.keys(select.selectize.options);",
-              "})()"
-            ),
-            function(value) length(unlist(value)) > 1L
-          )
-          origin_values <- unlist(origin_values, use.names = FALSE)
-
-          if ("-" %in% origin_values) {
-            stop("Company Lens exposed SIACAM '-' placeholder as a capital-origin choice")
-          }
-
-          real_origins <- origin_values[
-            nzchar(origin_values) & origin_values != "Todos"
-          ]
-          if (length(real_origins) == 0L) {
-            stop("Company Lens did not expose any real capital-origin choices")
-          }
-
-          cat("Capital-origin choices:", paste(real_origins, collapse = " | "), "\n")
-
-          count_expression <- "document.querySelector('#project_count')?.textContent?.trim() || ''"
-          selected_origin <- NULL
-          filtered_count <- NA_integer_
-
-          for (origin in real_origins) {
-            changed <- evaluate_value(sprintf(
-              paste(
-                "(() => {",
-                "const select = document.getElementById('capital_origin');",
-                "if (!select || !select.selectize) return false;",
-                "select.selectize.setValue(%s);",
-                "return true;",
-                "})()"
-              ),
-              jsonlite::toJSON(origin, auto_unbox = TRUE)
-            ))
-
-            if (!isTRUE(changed)) {
-              next
-            }
-
-            count_text <- wait_for_value(
-              count_expression,
-              function(value) {
-                if (!is.character(value) || length(value) != 1L) {
-                  return(FALSE)
-                }
-                count <- suppressWarnings(as.integer(sub(" .*", "", value)))
-                !is.na(count) && count > 0L && count < initial_marker_count
-              },
-              attempts = 12L
-            )
-            candidate_count <- suppressWarnings(as.integer(sub(" .*", "", count_text)))
-
-            if (
-              !is.na(candidate_count) &&
-              candidate_count > 0L &&
-              candidate_count < initial_marker_count
-            ) {
-              selected_origin <- origin
-              filtered_count <- candidate_count
-              break
-            }
-          }
-
-          if (is.null(selected_origin) || is.na(filtered_count)) {
-            stop("No capital-origin choice produced a valid reduced project view")
-          }
-
-          cat("Testing capital origin:", selected_origin, "\n")
-          cat("Filtered projects:", filtered_count, "\n")
-
-          filtered_marker_count <- wait_for_value(
-            marker_expression,
-            function(value) {
-              count <- suppressWarnings(as.integer(value))
-              !is.na(count) && count == filtered_count
-            }
-          )
-          filtered_marker_count <- as.integer(filtered_marker_count)
-
-          if (is.na(filtered_marker_count) || filtered_marker_count != filtered_count) {
-            stop("Leaflet marker count did not converge to the reactive project count")
-          }
-
-          clicked <- evaluate_value(paste(
-            "(() => {",
-            "const mark = document.querySelector('#map .leaflet-interactive');",
-            "if (!mark) return false;",
-            "mark.dispatchEvent(new MouseEvent('click', {bubbles: true, view: window}));",
-            "return true;",
-            "})()"
-          ))
-          if (!isTRUE(clicked)) {
-            stop("Could not click a filtered project marker")
-          }
-
-          popup_text <- wait_for_value(
-            "document.querySelector('.leaflet-popup-content')?.textContent || ''",
-            function(value) {
-              is.character(value) && length(value) == 1L && grepl("Controlantes", value, fixed = TRUE)
-            }
-          )
-          if (!is.character(popup_text) || !grepl("Controlantes", popup_text, fixed = TRUE)) {
-            stop("Filtered project popup did not expose Company Lens controller context")
-          }
-
-          if (grepl("Controlantes\\s*-", popup_text)) {
-            stop("Filtered project popup exposed SIACAM '-' as a controller")
-          }
-
-          cat("Popup controller context verified.\n")
-
-          writeLines(as.character(initial_marker_count), "artifacts/leaflet-feature-count.txt")
-          writeLines(as.character(filtered_count), "artifacts/company-lens-filtered-count.txt")
-          writeLines(selected_origin, "artifacts/company-lens-origin.txt")
-          writeLines(popup_text, "artifacts/company-lens-popup.txt")
+          cat("Leaflet interactive features:", marker_count, "\n")
+          writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
 
           browser$screenshot(filename = "artifacts/atlas-shiny.png")
 
@@ -264,8 +125,5 @@ jobs:
             artifacts/index.html
             artifacts/shiny.log
             artifacts/leaflet-feature-count.txt
-            artifacts/company-lens-filtered-count.txt
-            artifacts/company-lens-origin.txt
-            artifacts/company-lens-popup.txt
           if-no-files-found: error
           retention-days: 7

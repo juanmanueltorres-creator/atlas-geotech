@@ -35,8 +35,8 @@ metadata <- data.frame(
     "https://example.test/provinces.geojson"
   ),
   retrieved_at = c(
-    "2026-08-28T21:00:00Z",
-    "2026-08-28T21:00:00Z"
+    "2026-08-28T23:00:00Z",
+    "2026-08-28T23:00:00Z"
   ),
   stringsAsFactors = FALSE
 )
@@ -66,7 +66,8 @@ if (
     expect_match(html, 'class="atlas-provenance', fixed = TRUE)
     expect_match(html, "SIACAM mining projects", fixed = TRUE)
     expect_match(html, "Argentina provincial boundaries", fixed = TRUE)
-    expect_match(html, "Recuperado 2026-08-28T21:00:00Z", fixed = TRUE)
+    expect_match(html, "Recuperado 28/08/2026 · 20:00 ART", fixed = TRUE)
+    expect_false(grepl("2026-08-28T23:00:00Z", html, fixed = TRUE))
   })
 
   test_that("Atlas project count reacts to active filters", {

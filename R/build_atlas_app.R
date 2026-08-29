@@ -90,6 +90,23 @@ build_project_popup <- function(projects) {
   )
 }
 
+atlas_format_retrieved_at <- function(values) {
+  values <- trimws(as.character(values))
+  parsed <- as.POSIXct(
+    values,
+    format = "%Y-%m-%dT%H:%M:%SZ",
+    tz = "UTC"
+  )
+
+  formatted <- format(
+    parsed,
+    tz = "America/Argentina/Cordoba",
+    format = "%d/%m/%Y · %H:%M ART"
+  )
+  formatted[is.na(parsed)] <- values[is.na(parsed)]
+  formatted
+}
+
 atlas_provenance_ui <- function(metadata) {
   if (
     is.null(metadata) ||
@@ -112,6 +129,7 @@ atlas_provenance_ui <- function(metadata) {
 
   retrieved_at <- trimws(as.character(metadata$retrieved_at))
   retrieved_at <- unique(retrieved_at[!is.na(retrieved_at) & nzchar(retrieved_at)])
+  retrieved_display <- atlas_format_retrieved_at(retrieved_at)
 
   source_text <- if (length(source_names) > 0) {
     paste(source_names, collapse = " · ")
@@ -119,10 +137,10 @@ atlas_provenance_ui <- function(metadata) {
     "Fuentes no informadas"
   }
 
-  retrieved_text <- if (length(retrieved_at) == 1) {
-    paste0("Recuperado ", retrieved_at[[1]])
-  } else if (length(retrieved_at) > 1) {
-    paste0("Recuperaciones ", paste(retrieved_at, collapse = " · "))
+  retrieved_text <- if (length(retrieved_display) == 1) {
+    paste0("Recuperado ", retrieved_display[[1]])
+  } else if (length(retrieved_display) > 1) {
+    paste0("Recuperaciones ", paste(retrieved_display, collapse = " · "))
   } else {
     "Fecha de recuperación no disponible"
   }

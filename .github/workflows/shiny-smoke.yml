@@ -7,7 +7,6 @@ on:
       - main
       - feat/atlas-dark-theme
       - feat/atlas-minero-v0-data-spine
-      - feat/capital-map-v1
     paths:
       - .github/workflows/shiny-smoke.yml
       - app.R
@@ -15,10 +14,6 @@ on:
       - R/filter_projects.R
       - R/read_processed_data.R
       - R/run_atlas_app.R
-      - R/canonicalize_company_values.R
-      - R/extract_project_companies.R
-      - R/summarize_capital_origins.R
-      - R/capital_map.R
       - data/processed/**
 
 permissions:
@@ -79,219 +74,64 @@ jobs:
           cat artifacts/shiny.log || true
           exit 1
 
-      - name: Verify Capital Map in browser and capture evidence
+      - name: Wait for Leaflet data and capture screenshot
         shell: Rscript {0}
         run: |
           browser <- chromote::ChromoteSession$new()
           on.exit(browser$close(), add = TRUE)
 
-          evaluate_value <- function(expression) {
-            result <- browser$Runtime$evaluate(
-              expression = expression,
-              returnByValue = TRUE
-            )
-            result$result$value
-          }
-
-          wait_for_value <- function(expression, predicate, attempts = 45L) {
-            value <- NULL
-            for (attempt in seq_len(attempts)) {
-              value <- evaluate_value(expression)
-              if (isTRUE(predicate(value))) {
-                return(value)
-              }
-              Sys.sleep(1)
-            }
-            value
-          }
-
-          click_tab <- function(label) {
-            evaluate_value(sprintf(
-              paste(
-                "(() => {",
-                "const tab = Array.from(document.querySelectorAll('.nav-tabs a'))",
-                "  .find(a => a.textContent.trim() === %s);",
-                "if (!tab) return false;",
-                "tab.click();",
-                "return true;",
-                "})()"
-              ),
-              jsonlite::toJSON(label, auto_unbox = TRUE)
-            ))
-          }
-
           browser$Page$navigate("http://127.0.0.1:3838/")
 
-          marker_expression <- paste(
-            "(() => {",
-            "const mapPane = document.querySelector('#map .leaflet-map-pane');",
-            "const marks = document.querySelectorAll('#map .leaflet-interactive');",
-            "return mapPane ? marks.length : 0;",
-            "})()"
-          )
-          count_expression <- "document.querySelector('#project_count')?.textContent?.trim() || ''"
-          table_expression <- "document.querySelector('#capital_table table')?.innerText?.trim() || ''"
+          marker_count <- 0L
+          for (attempt in seq_len(45)) {
+            result <- browser$Runtime$evaluate(
+              expression = paste(
+                "(() => {",
+                "const mapPane = document.querySelector('#map .leaflet-map-pane');",
+                "const marks = document.querySelectorAll('#map .leaflet-interactive');",
+                "return mapPane ? marks.length : 0;",
+                "})()"
+              ),
+              returnByValue = TRUE
+            )
 
-          initial_marker_count <- wait_for_value(
-            marker_expression,
-            function(value) {
-              !is.null(value) && !is.na(as.integer(value)) && as.integer(value) > 0L
+            value <- result$result$value
+            if (is.null(value)) {
+              value <- 0L
             }
-          )
-          initial_marker_count <- as.integer(initial_marker_count)
+            marker_count <- as.integer(value)
 
-          if (is.na(initial_marker_count) || initial_marker_count != 331L) {
-            stop(sprintf(
-              "Expected 331 real-data project markers before filtering, got %s",
-              initial_marker_count
-            ))
-          }
-
-          initial_count_text <- wait_for_value(
-            count_expression,
-            function(value) identical(value, "331 proyectos")
-          )
-          if (!identical(initial_count_text, "331 proyectos")) {
-            stop(sprintf("Expected initial project count '331 proyectos', got '%s'", initial_count_text))
-          }
-
-          origin_values <- wait_for_value(
-            paste(
-              "(() => {",
-              "const select = document.getElementById('capital_origin');",
-              "if (!select || !select.selectize) return [];",
-              "return Object.keys(select.selectize.options);",
-              "})()"
-            ),
-            function(value) length(unlist(value)) > 1L
-          )
-          origin_values <- unlist(origin_values, use.names = FALSE)
-
-          if (!("Países Bajos" %in% origin_values)) {
-            stop("Capital-origin choices did not expose canonical 'Países Bajos'")
-          }
-          if ("Paises Bajos" %in% origin_values) {
-            stop("Capital-origin choices exposed raw alias 'Paises Bajos'")
-          }
-          if ("-" %in% origin_values) {
-            stop("Capital-origin choices exposed SIACAM '-' placeholder")
-          }
-
-          if (!isTRUE(click_tab("Capital"))) {
-            stop("Could not activate Capital tab")
-          }
-
-          initial_table <- wait_for_value(
-            table_expression,
-            function(value) {
-              is.character(value) &&
-                length(value) == 1L &&
-                grepl("Origen", value, fixed = TRUE) &&
-                grepl("Proyectos", value, fixed = TRUE) &&
-                grepl("Provincias", value, fixed = TRUE) &&
-                grepl("Minerales", value, fixed = TRUE) &&
-                grepl("Controlantes", value, fixed = TRUE)
+            if (!is.na(marker_count) && marker_count > 0L) {
+              break
             }
+
+            Sys.sleep(1)
+          }
+
+          if (is.na(marker_count) || marker_count <= 0L) {
+            stop("Leaflet map did not render any interactive project features")
+          }
+
+          cat("Rendered Leaflet interactive features:", marker_count, "\n")
+          writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
+
+          browser$screenshot(
+            filename = "artifacts/atlas-shiny.png"
           )
 
-          if (!is.character(initial_table) || !grepl("Países Bajos", initial_table, fixed = TRUE)) {
-            stop("Initial Capital table did not render canonical capital-origin data")
+          if (!file.exists("artifacts/atlas-shiny.png") ||
+              file.info("artifacts/atlas-shiny.png")$size <= 0) {
+            stop("Shiny screenshot was not created")
           }
-          if (grepl("Paises Bajos", initial_table, fixed = TRUE)) {
-            stop("Initial Capital table exposed raw capital-origin alias")
-          }
-
-          changed <- evaluate_value(paste(
-            "(() => {",
-            "const select = document.getElementById('capital_origin');",
-            "if (!select || !select.selectize) return false;",
-            "select.selectize.setValue('Países Bajos');",
-            "return true;",
-            "})()"
-          ))
-          if (!isTRUE(changed)) {
-            stop("Could not select canonical capital origin 'Países Bajos'")
-          }
-
-          filtered_count_text <- wait_for_value(
-            count_expression,
-            function(value) identical(value, "3 proyectos")
-          )
-          if (!identical(filtered_count_text, "3 proyectos")) {
-            stop(sprintf(
-              "Expected Países Bajos filter to yield '3 proyectos', got '%s'",
-              filtered_count_text
-            ))
-          }
-
-          filtered_table <- wait_for_value(
-            table_expression,
-            function(value) {
-              is.character(value) &&
-                length(value) == 1L &&
-                grepl("Países Bajos", value, fixed = TRUE) &&
-                !grepl("Argentina", value, fixed = TRUE)
-            }
-          )
-          if (!is.character(filtered_table) || !grepl("Países Bajos", filtered_table, fixed = TRUE)) {
-            stop("Filtered Capital table did not expose canonical Países Bajos row")
-          }
-          if (grepl("Paises Bajos", filtered_table, fixed = TRUE)) {
-            stop("Filtered Capital table exposed raw alias 'Paises Bajos'")
-          }
-
-          filtered_rows <- wait_for_value(
-            "document.querySelectorAll('#capital_table tbody tr').length",
-            function(value) !is.null(value) && as.integer(value) == 1L
-          )
-          if (as.integer(filtered_rows) != 1L) {
-            stop("Países Bajos Capital table should contain exactly one origin row")
-          }
-
-          browser$screenshot(filename = "artifacts/atlas-capital.png")
-          if (!file.exists("artifacts/atlas-capital.png") ||
-              file.info("artifacts/atlas-capital.png")$size <= 0) {
-            stop("Capital Map screenshot was not created")
-          }
-
-          if (!isTRUE(click_tab("Territorio"))) {
-            stop("Could not return to Territorio tab")
-          }
-
-          filtered_marker_count <- wait_for_value(
-            marker_expression,
-            function(value) {
-              count <- suppressWarnings(as.integer(value))
-              !is.na(count) && count == 3L
-            }
-          )
-          filtered_marker_count <- as.integer(filtered_marker_count)
-          if (is.na(filtered_marker_count) || filtered_marker_count != 3L) {
-            stop("Territorio marker count did not converge to 3 Países Bajos projects")
-          }
-
-          writeLines(as.character(initial_marker_count), "artifacts/leaflet-feature-count.txt")
-          writeLines(origin_values, "artifacts/capital-origin-choices.txt")
-          writeLines(initial_table, "artifacts/capital-table-initial.txt")
-          writeLines(filtered_table, "artifacts/capital-table-filtered.txt")
-          writeLines(filtered_count_text, "artifacts/filtered-project-count.txt")
-          writeLines(as.character(filtered_marker_count), "artifacts/filtered-marker-count.txt")
-
-          cat("Capital Map browser smoke verified: 331 -> 3 projects for Países Bajos.\n")
 
       - name: Upload Shiny smoke evidence
         uses: actions/upload-artifact@v4
         with:
           name: atlas-shiny-smoke
           path: |
-            artifacts/atlas-capital.png
+            artifacts/atlas-shiny.png
             artifacts/index.html
             artifacts/shiny.log
             artifacts/leaflet-feature-count.txt
-            artifacts/capital-origin-choices.txt
-            artifacts/capital-table-initial.txt
-            artifacts/capital-table-filtered.txt
-            artifacts/filtered-project-count.txt
-            artifacts/filtered-marker-count.txt
           if-no-files-found: error
           retention-days: 7

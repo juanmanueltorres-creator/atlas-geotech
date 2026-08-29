@@ -3,12 +3,14 @@ filter_path <- file.path("..", "..", "R", "filter_projects.R")
 canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
 companies_path <- file.path("..", "..", "R", "extract_project_companies.R")
 summary_path <- file.path("..", "..", "R", "summarize_capital_origins.R")
+capital_map_path <- file.path("..", "..", "R", "capital_map.R")
 
 source(canonicalize_path)
 source(companies_path)
 source(summary_path)
 source(filter_path)
 source(app_path)
+source(capital_map_path)
 
 projects <- sf::st_as_sf(
   data.frame(

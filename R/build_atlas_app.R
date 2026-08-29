@@ -35,6 +35,43 @@ atlas_province_check <- function(value) {
   "Discrepancia territorial"
 }
 
+atlas_basemap_provider <- function() {
+  "CartoDB.DarkMatter"
+}
+
+atlas_theme_css <- function() {
+  paste(
+    "html, body { background: #0b1220; color: #f9fafb; }",
+    "body { min-height: 100vh; }",
+    ".container-fluid { padding-left: 14px; padding-right: 14px; }",
+    ".atlas-header { margin: 12px 0 10px; padding: 0 2px 10px; border-bottom: 1px solid #243041; }",
+    ".atlas-header h2 { margin: 0; color: #f9fafb; font-weight: 600; letter-spacing: 0.01em; }",
+    ".well { background: #111827; color: #f9fafb; border: 1px solid #243041; border-radius: 7px; box-shadow: none; padding: 14px; margin-bottom: 10px; }",
+    ".form-group { margin-bottom: 10px; }",
+    ".control-label { color: #e5e7eb; font-weight: 600; }",
+    ".form-control, .selectize-input, .selectize-control.single .selectize-input { background: #0f172a; color: #f9fafb; border-color: #334155; box-shadow: none; }",
+    ".form-control:focus, .selectize-input.focus { border-color: #c68a2b; box-shadow: 0 0 0 1px #c68a2b; }",
+    ".selectize-input input { color: #f9fafb; }",
+    ".selectize-dropdown, .selectize-dropdown-content { background: #111827; color: #f9fafb; border-color: #334155; }",
+    ".selectize-dropdown .active { background: #1f2937; color: #f9fafb; }",
+    ".atlas-project-count { color: #c68a2b; font-size: 1.15rem; font-weight: 700; margin: 2px 0 12px; }",
+    ".atlas-provenance { color: #9ca3af; font-size: 0.88rem; line-height: 1.35; }",
+    ".atlas-provenance strong { color: #e5e7eb; }",
+    ".atlas-provenance strong, .atlas-provenance small { display: block; }",
+    ".atlas-provenance small { color: #7f8b9b; margin-top: 3px; }",
+    "#map { border: 1px solid #243041; border-radius: 7px; overflow: hidden; }",
+    ".leaflet-container { background: #0b1220; }",
+    ".leaflet-bar a, .leaflet-bar a:hover { background: #111827; color: #f9fafb; border-bottom-color: #243041; }",
+    ".leaflet-control-attribution { background: rgba(17, 24, 39, 0.88) !important; color: #9ca3af; }",
+    ".leaflet-control-attribution a { color: #d4a24c; }",
+    ".leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #111827; color: #f9fafb; }",
+    ".leaflet-popup-content-wrapper { border: 1px solid #243041; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }",
+    ".leaflet-popup-content b, .leaflet-popup-content strong { color: #d4a24c; }",
+    ".leaflet-container a.leaflet-popup-close-button { color: #9ca3af; }",
+    sep = "\n"
+  )
+}
+
 build_project_popup <- function(projects) {
   required_fields <- c(
     "name",
@@ -174,21 +211,7 @@ build_atlas_ui <- function(projects, metadata) {
 
   shiny::fluidPage(
     shiny::tags$head(
-      shiny::tags$style(
-        shiny::HTML(
-          paste(
-            ".atlas-header { margin: 12px 0 10px; }",
-            ".atlas-header h2 { margin: 0; }",
-            ".well { padding: 14px; margin-bottom: 10px; }",
-            ".form-group { margin-bottom: 10px; }",
-            ".atlas-project-count { font-size: 1.15rem; font-weight: 600; margin: 2px 0 12px; }",
-            ".atlas-provenance { font-size: 0.88rem; line-height: 1.35; }",
-            ".atlas-provenance strong, .atlas-provenance small { display: block; }",
-            ".atlas-provenance small { margin-top: 3px; }",
-            sep = "\n"
-          )
-        )
-      )
+      shiny::tags$style(shiny::HTML(atlas_theme_css()))
     ),
     shiny::tags$div(
       class = "atlas-header",
@@ -259,7 +282,10 @@ build_atlas_app <- function(projects, metadata) {
       data <- filtered_projects()
 
       map <- leaflet::leaflet(data = data)
-      map <- leaflet::addTiles(map)
+      map <- leaflet::addProviderTiles(
+        map,
+        provider = atlas_basemap_provider()
+      )
 
       if (nrow(data) > 0) {
         map <- leaflet::addCircleMarkers(
@@ -267,7 +293,9 @@ build_atlas_app <- function(projects, metadata) {
           radius = 6,
           stroke = TRUE,
           weight = 1,
-          fillOpacity = 0.8,
+          color = "#f0bd64",
+          fillColor = "#c68a2b",
+          fillOpacity = 0.86,
           popup = build_project_popup(data)
         )
       }

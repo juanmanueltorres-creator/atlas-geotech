@@ -1,0 +1,135 @@
+name: Shiny real-data smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/atlas-minero-v0-data-spine
+    paths:
+      - .github/workflows/shiny-smoke.yml
+      - app.R
+      - R/build_atlas_app.R
+      - R/filter_projects.R
+      - R/read_processed_data.R
+      - R/run_atlas_app.R
+      - data/processed/**
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.5'
+          use-public-rspm: true
+
+      - name: Install geospatial system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev
+
+      - name: Install Shiny runtime dependencies
+        shell: Rscript {0}
+        run: |
+          install.packages(c(
+            "dplyr",
+            "stringr",
+            "readr",
+            "sf",
+            "shiny",
+            "leaflet",
+            "chromote"
+          ))
+
+      - name: Start Atlas Shiny app
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          Rscript -e 'shiny::runApp(".", host="127.0.0.1", port=3838, launch.browser=FALSE)' \
+            > artifacts/shiny.log 2>&1 &
+          echo $! > artifacts/shiny.pid
+
+      - name: Wait for local HTTP response
+        shell: bash
+        run: |
+          for attempt in $(seq 1 45); do
+            if curl --fail --silent --show-error http://127.0.0.1:3838/ > artifacts/index.html; then
+              echo "Atlas Shiny responded on attempt ${attempt}."
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Atlas Shiny did not become ready."
+          cat artifacts/shiny.log || true
+          exit 1
+
+      - name: Wait for Leaflet data and capture screenshot
+        shell: Rscript {0}
+        run: |
+          browser <- chromote::ChromoteSession$new()
+          on.exit(browser$close(), add = TRUE)
+
+          browser$Page$navigate("http://127.0.0.1:3838/")
+
+          marker_count <- 0L
+          for (attempt in seq_len(45)) {
+            result <- browser$Runtime$evaluate(
+              expression = paste(
+                "(() => {",
+                "const mapPane = document.querySelector('#map .leaflet-map-pane');",
+                "const marks = document.querySelectorAll('#map .leaflet-interactive');",
+                "return mapPane ? marks.length : 0;",
+                "})()"
+              ),
+              returnByValue = TRUE
+            )
+
+            value <- result$result$value
+            if (is.null(value)) {
+              value <- 0L
+            }
+            marker_count <- as.integer(value)
+
+            if (!is.na(marker_count) && marker_count > 0L) {
+              break
+            }
+
+            Sys.sleep(1)
+          }
+
+          if (is.na(marker_count) || marker_count <= 0L) {
+            stop("Leaflet map did not render any interactive project features")
+          }
+
+          cat("Rendered Leaflet interactive features:", marker_count, "\n")
+          writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
+
+          browser$screenshot(
+            filename = "artifacts/atlas-shiny.png"
+          )
+
+          if (!file.exists("artifacts/atlas-shiny.png") ||
+              file.info("artifacts/atlas-shiny.png")$size <= 0) {
+            stop("Shiny screenshot was not created")
+          }
+
+      - name: Upload Shiny smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-shiny-smoke
+          path: |
+            artifacts/atlas-shiny.png
+            artifacts/index.html
+            artifacts/shiny.log
+            artifacts/leaflet-feature-count.txt
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,98 @@
+name: Refresh official Atlas data
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/atlas-minero-v0-data-spine
+    paths:
+      - .github/workflows/refresh-official-data.yml
+      - R/refresh_official_data.R
+      - R/load_sources.R
+      - R/clean_projects.R
+      - R/validate_projects.R
+      - R/build_spatial_projects.R
+      - scripts/refresh_data.R
+
+permissions:
+  contents: read
+
+jobs:
+  live-refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.5'
+          use-public-rspm: true
+
+      - name: Install geospatial system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev
+
+      - name: Install refresh dependencies
+        shell: Rscript {0}
+        run: |
+          install.packages(c(
+            "dplyr",
+            "stringr",
+            "readr",
+            "readxl",
+            "sf"
+          ))
+
+      - name: Refresh from official public sources
+        shell: Rscript {0}
+        run: |
+          source("R/load_sources.R")
+          source("R/clean_projects.R")
+          source("R/validate_projects.R")
+          source("R/build_spatial_projects.R")
+          source("scripts/refresh_data.R")
+          source("R/refresh_official_data.R")
+
+          output_dir <- file.path("artifacts", "processed")
+          result <- refresh_official_atlas_data(output_dir = output_dir)
+
+          required_paths <- unname(result$paths)
+          if (!all(file.exists(required_paths))) {
+            stop("Live refresh did not create all required Atlas artifacts")
+          }
+          if (any(file.info(required_paths)$size <= 0)) {
+            stop("Live refresh created an empty Atlas artifact")
+          }
+
+          projects <- sf::st_read(
+            file.path(output_dir, "projects.geojson"),
+            quiet = TRUE
+          )
+          metadata <- readr::read_csv(
+            file.path(output_dir, "metadata.csv"),
+            show_col_types = FALSE
+          )
+
+          if (nrow(projects) == 0) {
+            stop("Live official Atlas project dataset is empty")
+          }
+
+          cat("Atlas live refresh summary\n")
+          cat("projects:", nrow(projects), "\n")
+          cat("spatial provinces:", length(unique(stats::na.omit(projects$spatial_province))), "\n")
+          cat("province mismatches:", sum(projects$province_match %in% FALSE, na.rm = TRUE), "\n")
+          cat("unmatched province comparisons:", sum(is.na(projects$province_match)), "\n")
+          cat("validation issues:", nrow(result$issues), "\n")
+          print(metadata)
+
+      - name: Upload processed Atlas artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-official-processed
+          path: artifacts/processed
+          if-no-files-found: error
+          retention-days: 7

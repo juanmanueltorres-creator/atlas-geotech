@@ -36,3 +36,37 @@ atlas_capital_summary <- function(projects, companies, capital_origin = NULL) {
 
   summarize_capital_origins(projects, relevant_companies)
 }
+
+atlas_capital_table_data <- function(summary) {
+  required_fields <- c(
+    "capital_origin",
+    "project_count",
+    "province_count",
+    "commodity_count",
+    "controller_count",
+    "top_controllers"
+  )
+  missing_fields <- setdiff(required_fields, names(summary))
+
+  if (length(missing_fields) > 0) {
+    stop(
+      sprintf(
+        "Capital summary is missing fields required for table presentation: %s",
+        paste(missing_fields, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  table <- data.frame(
+    Origen = as.character(summary$capital_origin),
+    Proyectos = as.integer(summary$project_count),
+    Provincias = as.integer(summary$province_count),
+    Minerales = as.integer(summary$commodity_count),
+    Controlantes = as.integer(summary$controller_count),
+    stringsAsFactors = FALSE,
+    check.names = FALSE
+  )
+  table[["Controlantes con más proyectos"]] <- as.character(summary$top_controllers)
+  table
+}

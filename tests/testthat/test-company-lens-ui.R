@@ -2,9 +2,11 @@ app_path <- file.path("..", "..", "R", "build_atlas_app.R")
 filter_path <- file.path("..", "..", "R", "filter_projects.R")
 canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
 companies_path <- file.path("..", "..", "R", "extract_project_companies.R")
+summary_path <- file.path("..", "..", "R", "summarize_capital_origins.R")
 
 source(canonicalize_path)
 source(companies_path)
+source(summary_path)
 source(filter_path)
 source(app_path)
 
@@ -106,4 +108,30 @@ test_that("canonical capital origin filter matches projects from both source spe
 
     expect_equal(output$project_count, "2 proyectos")
   })
+})
+
+test_that("capital summary respects project filters and does not reintroduce mixed origins", {
+  expect_true(
+    exists("atlas_capital_summary", mode = "function"),
+    info = "Capital Map requires a helper that applies project and origin filters to the company relation"
+  )
+
+  if (!exists("atlas_capital_summary", mode = "function")) {
+    return(invisible())
+  }
+
+  companies <- atlas_project_companies(projects)
+
+  all_summary <- atlas_capital_summary(projects, companies, "Todos")
+  expect_equal(all_summary$capital_origin, c("Canadá", "Argentina"))
+  expect_equal(all_summary$project_count, c(2L, 1L))
+
+  argentina_summary <- atlas_capital_summary(projects, companies, "Argentina")
+  expect_equal(argentina_summary$capital_origin, "Argentina")
+  expect_equal(argentina_summary$project_count, 1L)
+
+  jujuy_projects <- filter_projects(projects, province = "Jujuy")
+  jujuy_summary <- atlas_capital_summary(jujuy_projects, companies, "Todos")
+  expect_equal(jujuy_summary$capital_origin, "Canadá")
+  expect_equal(jujuy_summary$project_count, 1L)
 })

@@ -1,3 +1,8 @@
+canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
+if (file.exists(canonicalize_path)) {
+  source(canonicalize_path)
+}
+
 source_path <- file.path("..", "..", "R", "extract_project_companies.R")
 if (file.exists(source_path)) {
   source(source_path)
@@ -74,6 +79,19 @@ if (exists("extract_project_companies", mode = "function")) {
     expect_true(is.na(company_d$capital_origin))
     expect_false("-" %in% companies$company_name)
     expect_false("-" %in% stats::na.omit(companies$capital_origin))
+  })
+
+  test_that("verified capital origin aliases are canonical in the derived relation", {
+    alias_projects <- projects[1:2, , drop = FALSE]
+    alias_projects$origin_1 <- c("Paises Bajos", "Países Bajos")
+
+    companies <- extract_project_companies(alias_projects)
+    primary_controllers <- companies[companies$company_rank == 1L, , drop = FALSE]
+
+    expect_identical(
+      primary_controllers$capital_origin,
+      c("Países Bajos", "Países Bajos")
+    )
   })
 
   test_that("extract_project_companies does not invent rows without a controller", {

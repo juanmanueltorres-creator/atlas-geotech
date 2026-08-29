@@ -461,6 +461,28 @@ build_atlas_app <- function(projects, metadata) {
       paste(count, noun)
     })
 
+    output$capital_table <- shiny::renderTable({
+      if (!exists("atlas_capital_summary", mode = "function", inherits = TRUE)) {
+        stop(
+          "atlas_capital_summary() must be loaded before starting the Capital view",
+          call. = FALSE
+        )
+      }
+      if (!exists("atlas_capital_table_data", mode = "function", inherits = TRUE)) {
+        stop(
+          "atlas_capital_table_data() must be loaded before starting the Capital view",
+          call. = FALSE
+        )
+      }
+
+      summary <- atlas_capital_summary(
+        filtered_projects(),
+        companies,
+        capital_origin = input$capital_origin
+      )
+      atlas_capital_table_data(summary)
+    }, rownames = FALSE)
+
     output$map <- leaflet::renderLeaflet({
       data <- filtered_projects()
 

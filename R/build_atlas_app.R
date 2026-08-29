@@ -94,6 +94,47 @@ atlas_filter_by_capital_origin <- function(projects, companies, capital_origin) 
   ]
 }
 
+atlas_popup_company_fields <- function() {
+  unlist(
+    lapply(seq_len(3), function(rank) {
+      c(
+        paste0("controller_", rank),
+        paste0("share_", rank),
+        paste0("origin_", rank)
+      )
+    }),
+    use.names = FALSE
+  )
+}
+
+atlas_controller_rows <- function(projects, index) {
+  if (!all(atlas_popup_company_fields() %in% names(projects))) {
+    return(list())
+  }
+
+  rows <- lapply(seq_len(3), function(rank) {
+    company <- trimws(
+      as.character(projects[[paste0("controller_", rank)]][[index]])
+    )
+
+    if (is.na(company) || !nzchar(company)) {
+      return(NULL)
+    }
+
+    list(
+      company_name = company,
+      share_text = atlas_display_value(
+        projects[[paste0("share_", rank)]][[index]]
+      )[[1]],
+      capital_origin = atlas_display_value(
+        projects[[paste0("origin_", rank)]][[index]]
+      )[[1]]
+    )
+  })
+
+  Filter(Negate(is.null), rows)
+}
+
 atlas_basemap_provider <- function() {
   "OpenStreetMap.Mapnik"
 }
@@ -167,21 +208,46 @@ build_project_popup <- function(projects) {
   vapply(
     seq_len(nrow(projects)),
     function(index) {
-      as.character(
-        shiny::tags$div(
-          shiny::tags$strong(names[[index]]),
-          shiny::tags$br(),
-          shiny::tags$b("Mineral: "), commodities[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Etapa: "), stages[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Provincia declarada: "), source_provinces[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Provincia espacial: "), spatial_provinces[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Control territorial: "), province_checks[[index]]
-        )
+      children <- list(
+        shiny::tags$strong(names[[index]]),
+        shiny::tags$br(),
+        shiny::tags$b("Mineral: "), commodities[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Etapa: "), stages[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Provincia declarada: "), source_provinces[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Provincia espacial: "), spatial_provinces[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Control territorial: "), province_checks[[index]]
       )
+
+      controllers <- atlas_controller_rows(projects, index)
+      if (length(controllers) > 0) {
+        children <- c(
+          children,
+          list(
+            shiny::tags$br(),
+            shiny::tags$b("Controlantes")
+          )
+        )
+
+        for (controller in controllers) {
+          children <- c(
+            children,
+            list(
+              shiny::tags$br(),
+              controller$company_name,
+              " · ",
+              controller$share_text,
+              " · ",
+              controller$capital_origin
+            )
+          )
+        }
+      }
+
+      as.character(do.call(shiny::tags$div, children))
     },
     character(1)
   )

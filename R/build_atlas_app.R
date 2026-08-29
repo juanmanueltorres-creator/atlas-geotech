@@ -35,6 +35,65 @@ atlas_province_check <- function(value) {
   "Discrepancia territorial"
 }
 
+atlas_empty_companies <- function() {
+  data.frame(
+    project_id = character(),
+    project_name = character(),
+    company_rank = integer(),
+    company_name = character(),
+    share_text = character(),
+    capital_origin = character(),
+    stringsAsFactors = FALSE
+  )
+}
+
+atlas_project_companies <- function(projects) {
+  company_fields <- c(
+    "project_id",
+    "name",
+    "controller_1",
+    "share_1",
+    "origin_1",
+    "controller_2",
+    "share_2",
+    "origin_2",
+    "controller_3",
+    "share_3",
+    "origin_3"
+  )
+
+  if (
+    !exists("extract_project_companies", mode = "function", inherits = TRUE) ||
+    !all(company_fields %in% names(projects))
+  ) {
+    return(atlas_empty_companies())
+  }
+
+  extract_project_companies(projects)
+}
+
+atlas_filter_by_capital_origin <- function(projects, companies, capital_origin) {
+  capital_origin <- atlas_filter_value(capital_origin)
+  if (is.null(capital_origin)) {
+    return(projects)
+  }
+
+  origins <- trimws(as.character(companies$capital_origin))
+  matching_ids <- unique(
+    as.character(companies$project_id[!is.na(origins) & origins == capital_origin])
+  )
+
+  if (!("project_id" %in% names(projects))) {
+    return(projects[FALSE, , drop = FALSE])
+  }
+
+  projects[
+    as.character(projects$project_id) %in% matching_ids,
+    ,
+    drop = FALSE
+  ]
+}
+
 atlas_basemap_provider <- function() {
   "OpenStreetMap.Mapnik"
 }
@@ -206,9 +265,11 @@ build_atlas_ui <- function(projects, metadata) {
     )
   }
 
+  companies <- atlas_project_companies(projects)
   province_choices <- atlas_filter_choices(projects$spatial_province)
   mineral_choices <- atlas_filter_choices(projects$commodity)
   stage_choices <- atlas_filter_choices(projects$stage)
+  capital_origin_choices <- atlas_filter_choices(companies$capital_origin)
 
   shiny::fluidPage(
     shiny::tags$head(
@@ -238,6 +299,12 @@ build_atlas_ui <- function(projects, metadata) {
           choices = c("Todos", stage_choices),
           selected = "Todos"
         ),
+        shiny::selectInput(
+          "capital_origin",
+          "Origen del capital",
+          choices = c("Todos", capital_origin_choices),
+          selected = "Todos"
+        ),
         shiny::tags$div(
           class = "atlas-project-count",
           shiny::textOutput("project_count", inline = TRUE)
@@ -254,6 +321,7 @@ build_atlas_ui <- function(projects, metadata) {
 }
 
 build_atlas_app <- function(projects, metadata) {
+  companies <- atlas_project_companies(projects)
   ui <- build_atlas_ui(projects, metadata)
 
   server <- function(input, output, session) {
@@ -265,11 +333,17 @@ build_atlas_app <- function(projects, metadata) {
         )
       }
 
-      filter_projects(
+      data <- filter_projects(
         projects,
         province = atlas_filter_value(input$province),
         mineral = atlas_filter_value(input$mineral),
         stage = atlas_filter_value(input$stage)
+      )
+
+      atlas_filter_by_capital_origin(
+        data,
+        companies,
+        input$capital_origin
       )
     })
 

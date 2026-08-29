@@ -36,7 +36,7 @@ atlas_province_check <- function(value) {
 }
 
 atlas_basemap_provider <- function() {
-  "CartoDB.DarkMatter"
+  "OpenStreetMap.Mapnik"
 }
 
 atlas_theme_css <- function() {
@@ -61,6 +61,7 @@ atlas_theme_css <- function() {
     ".atlas-provenance small { color: #7f8b9b; margin-top: 3px; }",
     "#map { border: 1px solid #243041; border-radius: 7px; overflow: hidden; }",
     ".leaflet-container { background: #0b1220; }",
+    ".leaflet-tile-pane { filter: brightness(0.55) invert(1) contrast(1.15) hue-rotate(180deg) saturate(0.35); }",
     ".leaflet-bar a, .leaflet-bar a:hover { background: #111827; color: #f9fafb; border-bottom-color: #243041; }",
     ".leaflet-control-attribution { background: rgba(17, 24, 39, 0.88) !important; color: #9ca3af; }",
     ".leaflet-control-attribution a { color: #d4a24c; }",

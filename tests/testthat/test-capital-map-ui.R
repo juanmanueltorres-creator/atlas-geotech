@@ -123,3 +123,38 @@ test_that("Capital table reacts to existing project and origin filters", {
     expect_false(grepl("Argentina", output$capital_table, fixed = TRUE))
   })
 })
+
+test_that("Capital analytics remain empty and safe for legacy datasets without company fields", {
+  legacy_projects <- projects
+  legacy_projects[c(
+    "controller_1",
+    "share_1",
+    "origin_1",
+    "controller_2",
+    "share_2",
+    "origin_2",
+    "controller_3",
+    "share_3",
+    "origin_3"
+  )] <- NULL
+
+  companies <- atlas_project_companies(legacy_projects)
+  expect_equal(nrow(companies), 0L)
+
+  summary <- atlas_capital_summary(legacy_projects, companies, NULL)
+  expect_equal(nrow(summary), 0L)
+
+  table <- atlas_capital_table_data(summary)
+  expect_equal(nrow(table), 0L)
+  expect_named(
+    table,
+    c(
+      "Origen",
+      "Proyectos",
+      "Provincias",
+      "Minerales",
+      "Controlantes",
+      "Controlantes con más proyectos"
+    )
+  )
+})

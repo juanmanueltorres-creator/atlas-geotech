@@ -1,5 +1,6 @@
 source("R/filter_projects.R", local = TRUE)
 source("R/read_processed_data.R", local = TRUE)
+source("R/canonicalize_company_values.R", local = TRUE)
 source("R/extract_project_companies.R", local = TRUE)
 source("R/build_atlas_app.R", local = TRUE)
 source("R/run_atlas_app.R", local = TRUE)

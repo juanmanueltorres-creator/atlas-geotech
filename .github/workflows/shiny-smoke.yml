@@ -74,7 +74,7 @@ jobs:
           cat artifacts/shiny.log || true
           exit 1
 
-      - name: Render Atlas page and capture screenshot
+      - name: Wait for Leaflet data and capture screenshot
         shell: Rscript {0}
         run: |
           browser <- chromote::ChromoteSession$new()
@@ -95,10 +95,16 @@ jobs:
               returnByValue = TRUE
             )
 
-            marker_count <- as.integer(result$result$value %||% 0L)
+            value <- result$result$value
+            if (is.null(value)) {
+              value <- 0L
+            }
+            marker_count <- as.integer(value)
+
             if (!is.na(marker_count) && marker_count > 0L) {
               break
             }
+
             Sys.sleep(1)
           }
 
@@ -106,10 +112,12 @@ jobs:
             stop("Leaflet map did not render any interactive project features")
           }
 
-          cat("Leaflet interactive features:", marker_count, "\n")
+          cat("Rendered Leaflet interactive features:", marker_count, "\n")
           writeLines(as.character(marker_count), "artifacts/leaflet-feature-count.txt")
 
-          browser$screenshot(filename = "artifacts/atlas-shiny.png")
+          browser$screenshot(
+            filename = "artifacts/atlas-shiny.png"
+          )
 
           if (!file.exists("artifacts/atlas-shiny.png") ||
               file.info("artifacts/atlas-shiny.png")$size <= 0) {

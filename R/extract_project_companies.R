@@ -48,6 +48,10 @@ extract_project_companies <- function(projects) {
   companies$share_text <- normalize_siacam_value(companies$share_text)
   companies$capital_origin <- normalize_siacam_value(companies$capital_origin)
 
+  if (exists("canonicalize_capital_origin", mode = "function", inherits = TRUE)) {
+    companies$capital_origin <- canonicalize_capital_origin(companies$capital_origin)
+  }
+
   companies <- companies[!is.na(companies$company_name), , drop = FALSE]
   rownames(companies) <- NULL
   companies

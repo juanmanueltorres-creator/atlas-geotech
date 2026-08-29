@@ -1,7 +1,9 @@
 app_path <- file.path("..", "..", "R", "build_atlas_app.R")
 filter_path <- file.path("..", "..", "R", "filter_projects.R")
+canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
 companies_path <- file.path("..", "..", "R", "extract_project_companies.R")
 
+source(canonicalize_path)
 source(companies_path)
 source(filter_path)
 source(app_path)
@@ -71,5 +73,37 @@ test_that("capital origin filter narrows projects without changing existing filt
 
     session$setInputs(province = "Jujuy", capital_origin = "Argentina")
     expect_equal(output$project_count, "0 proyectos")
+  })
+})
+
+test_that("capital origin choices expose only the verified canonical alias", {
+  alias_projects <- projects
+  alias_projects$origin_1 <- c("Paises Bajos", "Países Bajos")
+  alias_projects$origin_2 <- c(NA_character_, NA_character_)
+
+  ui <- build_atlas_ui(alias_projects, metadata)
+  html <- as.character(ui)
+
+  expect_match(html, "Países Bajos", fixed = TRUE)
+  expect_false(grepl("Paises Bajos", html, fixed = TRUE))
+})
+
+test_that("canonical capital origin filter matches projects from both source spellings", {
+  alias_projects <- projects
+  alias_projects$origin_1 <- c("Paises Bajos", "Países Bajos")
+  alias_projects$origin_2 <- c(NA_character_, NA_character_)
+
+  app <- build_atlas_app(alias_projects, metadata)
+  server <- app$serverFuncSource()
+
+  shiny::testServer(server, {
+    session$setInputs(
+      province = "Todos",
+      mineral = "Todos",
+      stage = "Todos",
+      capital_origin = "Países Bajos"
+    )
+
+    expect_equal(output$project_count, "2 proyectos")
   })
 })

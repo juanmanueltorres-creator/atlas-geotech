@@ -1,5 +1,7 @@
+canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
 app_path <- file.path("..", "..", "R", "build_atlas_app.R")
 
+source(canonicalize_path)
 source(app_path)
 
 projects <- data.frame(
@@ -105,5 +107,15 @@ if (exists("build_project_popup", mode = "function")) {
     expect_match(popup, "Sin dato", fixed = TRUE)
     expect_false(grepl("<br/>- · - · -", popup, fixed = TRUE))
     expect_false(grepl("Empresa Real · - · -", popup, fixed = TRUE))
+  })
+
+  test_that("project popups display verified capital origin aliases canonically", {
+    alias_project <- company_projects
+    alias_project$origin_1 <- "Paises Bajos"
+
+    popup <- build_project_popup(alias_project)[[1]]
+
+    expect_match(popup, "Países Bajos", fixed = TRUE)
+    expect_false(grepl("Paises Bajos", popup, fixed = TRUE))
   })
 }

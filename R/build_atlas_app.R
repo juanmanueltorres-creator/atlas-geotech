@@ -23,6 +23,17 @@ atlas_display_value <- function(value) {
   value
 }
 
+atlas_company_value_is_missing <- function(value) {
+  value <- trimws(as.character(value))
+  is.na(value) | !nzchar(value) | value == "-"
+}
+
+atlas_company_display_value <- function(value) {
+  value <- trimws(as.character(value))
+  value[atlas_company_value_is_missing(value)] <- "Sin dato"
+  value
+}
+
 atlas_province_check <- function(value) {
   if (is.na(value)) {
     return("Comparación territorial no disponible")
@@ -33,6 +44,106 @@ atlas_province_check <- function(value) {
   }
 
   "Discrepancia territorial"
+}
+
+atlas_empty_companies <- function() {
+  data.frame(
+    project_id = character(),
+    project_name = character(),
+    company_rank = integer(),
+    company_name = character(),
+    share_text = character(),
+    capital_origin = character(),
+    stringsAsFactors = FALSE
+  )
+}
+
+atlas_project_companies <- function(projects) {
+  company_fields <- c(
+    "project_id",
+    "name",
+    "controller_1",
+    "share_1",
+    "origin_1",
+    "controller_2",
+    "share_2",
+    "origin_2",
+    "controller_3",
+    "share_3",
+    "origin_3"
+  )
+
+  if (
+    !exists("extract_project_companies", mode = "function", inherits = TRUE) ||
+    !all(company_fields %in% names(projects))
+  ) {
+    return(atlas_empty_companies())
+  }
+
+  extract_project_companies(projects)
+}
+
+atlas_filter_by_capital_origin <- function(projects, companies, capital_origin) {
+  capital_origin <- atlas_filter_value(capital_origin)
+  if (is.null(capital_origin)) {
+    return(projects)
+  }
+
+  origins <- trimws(as.character(companies$capital_origin))
+  matching_ids <- unique(
+    as.character(companies$project_id[!is.na(origins) & origins == capital_origin])
+  )
+
+  if (!("project_id" %in% names(projects))) {
+    return(projects[FALSE, , drop = FALSE])
+  }
+
+  projects[
+    as.character(projects$project_id) %in% matching_ids,
+    ,
+    drop = FALSE
+  ]
+}
+
+atlas_popup_company_fields <- function() {
+  unlist(
+    lapply(seq_len(3), function(rank) {
+      c(
+        paste0("controller_", rank),
+        paste0("share_", rank),
+        paste0("origin_", rank)
+      )
+    }),
+    use.names = FALSE
+  )
+}
+
+atlas_controller_rows <- function(projects, index) {
+  if (!all(atlas_popup_company_fields() %in% names(projects))) {
+    return(list())
+  }
+
+  rows <- lapply(seq_len(3), function(rank) {
+    company <- trimws(
+      as.character(projects[[paste0("controller_", rank)]][[index]])
+    )
+
+    if (atlas_company_value_is_missing(company)) {
+      return(NULL)
+    }
+
+    list(
+      company_name = company,
+      share_text = atlas_company_display_value(
+        projects[[paste0("share_", rank)]][[index]]
+      )[[1]],
+      capital_origin = atlas_company_display_value(
+        projects[[paste0("origin_", rank)]][[index]]
+      )[[1]]
+    )
+  })
+
+  Filter(Negate(is.null), rows)
 }
 
 atlas_basemap_provider <- function() {
@@ -108,21 +219,46 @@ build_project_popup <- function(projects) {
   vapply(
     seq_len(nrow(projects)),
     function(index) {
-      as.character(
-        shiny::tags$div(
-          shiny::tags$strong(names[[index]]),
-          shiny::tags$br(),
-          shiny::tags$b("Mineral: "), commodities[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Etapa: "), stages[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Provincia declarada: "), source_provinces[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Provincia espacial: "), spatial_provinces[[index]],
-          shiny::tags$br(),
-          shiny::tags$b("Control territorial: "), province_checks[[index]]
-        )
+      children <- list(
+        shiny::tags$strong(names[[index]]),
+        shiny::tags$br(),
+        shiny::tags$b("Mineral: "), commodities[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Etapa: "), stages[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Provincia declarada: "), source_provinces[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Provincia espacial: "), spatial_provinces[[index]],
+        shiny::tags$br(),
+        shiny::tags$b("Control territorial: "), province_checks[[index]]
       )
+
+      controllers <- atlas_controller_rows(projects, index)
+      if (length(controllers) > 0) {
+        children <- c(
+          children,
+          list(
+            shiny::tags$br(),
+            shiny::tags$b("Controlantes")
+          )
+        )
+
+        for (controller in controllers) {
+          children <- c(
+            children,
+            list(
+              shiny::tags$br(),
+              controller$company_name,
+              " · ",
+              controller$share_text,
+              " · ",
+              controller$capital_origin
+            )
+          )
+        }
+      }
+
+      as.character(do.call(shiny::tags$div, children))
     },
     character(1)
   )
@@ -206,9 +342,11 @@ build_atlas_ui <- function(projects, metadata) {
     )
   }
 
+  companies <- atlas_project_companies(projects)
   province_choices <- atlas_filter_choices(projects$spatial_province)
   mineral_choices <- atlas_filter_choices(projects$commodity)
   stage_choices <- atlas_filter_choices(projects$stage)
+  capital_origin_choices <- atlas_filter_choices(companies$capital_origin)
 
   shiny::fluidPage(
     shiny::tags$head(
@@ -238,6 +376,12 @@ build_atlas_ui <- function(projects, metadata) {
           choices = c("Todos", stage_choices),
           selected = "Todos"
         ),
+        shiny::selectInput(
+          "capital_origin",
+          "Origen del capital",
+          choices = c("Todos", capital_origin_choices),
+          selected = "Todos"
+        ),
         shiny::tags$div(
           class = "atlas-project-count",
           shiny::textOutput("project_count", inline = TRUE)
@@ -254,6 +398,7 @@ build_atlas_ui <- function(projects, metadata) {
 }
 
 build_atlas_app <- function(projects, metadata) {
+  companies <- atlas_project_companies(projects)
   ui <- build_atlas_ui(projects, metadata)
 
   server <- function(input, output, session) {
@@ -265,11 +410,17 @@ build_atlas_app <- function(projects, metadata) {
         )
       }
 
-      filter_projects(
+      data <- filter_projects(
         projects,
         province = atlas_filter_value(input$province),
         mineral = atlas_filter_value(input$mineral),
         stage = atlas_filter_value(input$stage)
+      )
+
+      atlas_filter_by_capital_origin(
+        data,
+        companies,
+        input$capital_origin
       )
     })
 

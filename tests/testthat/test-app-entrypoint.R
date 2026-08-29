@@ -70,5 +70,9 @@ if (file.exists(app_path)) {
 
     expect_true(exists("app", envir = env, inherits = FALSE))
     expect_s3_class(env$app, "shiny.appobj")
+    expect_true(
+      exists("extract_project_companies", envir = env, inherits = FALSE),
+      info = "app.R must load the company extraction helper for production data"
+    )
   })
 }

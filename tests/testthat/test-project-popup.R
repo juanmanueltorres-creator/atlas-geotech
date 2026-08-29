@@ -12,6 +12,44 @@ projects <- data.frame(
   stringsAsFactors = FALSE
 )
 
+company_projects <- data.frame(
+  name = "Proyecto Empresa",
+  commodity = "Cobre",
+  stage = "Exploración",
+  source_province = "San Juan",
+  spatial_province = "San Juan",
+  province_match = TRUE,
+  controller_1 = "Empresa A",
+  share_1 = "80%",
+  origin_1 = "Argentina",
+  controller_2 = "Empresa <B>",
+  share_2 = NA_character_,
+  origin_2 = "Canadá",
+  controller_3 = NA_character_,
+  share_3 = NA_character_,
+  origin_3 = NA_character_,
+  stringsAsFactors = FALSE
+)
+
+placeholder_projects <- data.frame(
+  name = "Proyecto Placeholder",
+  commodity = "Cobre",
+  stage = "Exploración",
+  source_province = "San Juan",
+  spatial_province = "San Juan",
+  province_match = TRUE,
+  controller_1 = "Empresa Real",
+  share_1 = "-",
+  origin_1 = "-",
+  controller_2 = "-",
+  share_2 = "-",
+  origin_2 = "-",
+  controller_3 = NA_character_,
+  share_3 = NA_character_,
+  origin_3 = NA_character_,
+  stringsAsFactors = FALSE
+)
+
 test_that("build_project_popup is available", {
   expect_true(exists("build_project_popup", mode = "function"))
 })
@@ -28,6 +66,7 @@ if (exists("build_project_popup", mode = "function")) {
     expect_match(popup[[1]], "Provincia espacial", fixed = TRUE)
     expect_match(popup[[1]], "San Juan", fixed = TRUE)
     expect_match(popup[[1]], "Coinciden", fixed = TRUE)
+    expect_false(grepl("Controlantes", popup[[1]], fixed = TRUE))
   })
 
   test_that("missing values are explicit and territorial mismatches are visible", {
@@ -44,5 +83,27 @@ if (exists("build_project_popup", mode = "function")) {
 
     expect_false(grepl("Proyecto <B>", popup[[2]], fixed = TRUE))
     expect_match(popup[[2]], "Proyecto &lt;B&gt;", fixed = TRUE)
+  })
+
+  test_that("project popups show only declared controllers and their source context", {
+    popup <- build_project_popup(company_projects)[[1]]
+
+    expect_match(popup, "Controlantes", fixed = TRUE)
+    expect_match(popup, "Empresa A", fixed = TRUE)
+    expect_match(popup, "80%", fixed = TRUE)
+    expect_match(popup, "Argentina", fixed = TRUE)
+    expect_false(grepl("Empresa <B>", popup, fixed = TRUE))
+    expect_match(popup, "Empresa &lt;B&gt;", fixed = TRUE)
+    expect_match(popup, "Canadá", fixed = TRUE)
+    expect_match(popup, "Sin dato", fixed = TRUE)
+  })
+
+  test_that("project popups treat SIACAM dash placeholders as missing values", {
+    popup <- build_project_popup(placeholder_projects)[[1]]
+
+    expect_match(popup, "Empresa Real", fixed = TRUE)
+    expect_match(popup, "Sin dato", fixed = TRUE)
+    expect_false(grepl("<br/>- · - · -", popup, fixed = TRUE))
+    expect_false(grepl("Empresa Real · - · -", popup, fixed = TRUE))
   })
 }

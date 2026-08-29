@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
+      - feat/atlas-dark-theme
       - feat/atlas-minero-v0-data-spine
     paths:
       - .github/workflows/shiny-smoke.yml

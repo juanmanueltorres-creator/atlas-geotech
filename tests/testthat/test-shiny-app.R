@@ -46,6 +46,25 @@ test_that("minimal Atlas Shiny builders are available", {
   expect_true(exists("build_atlas_app", mode = "function"))
 })
 
+test_that("Atlas exposes the approved dark visual system", {
+  expect_true(exists("atlas_theme_css", mode = "function"))
+  expect_true(exists("atlas_basemap_provider", mode = "function"))
+
+  if (
+    exists("atlas_theme_css", mode = "function") &&
+    exists("atlas_basemap_provider", mode = "function")
+  ) {
+    css <- atlas_theme_css()
+
+    expect_match(css, "#0b1220", fixed = TRUE)
+    expect_match(css, "#111827", fixed = TRUE)
+    expect_match(css, "#c68a2b", fixed = TRUE)
+    expect_match(css, ".leaflet-tile-pane", fixed = TRUE)
+    expect_match(css, "filter:", fixed = TRUE)
+    expect_equal(atlas_basemap_provider(), "OpenStreetMap.Mapnik")
+  }
+})
+
 if (
   exists("build_atlas_ui", mode = "function") &&
   exists("build_atlas_app", mode = "function")

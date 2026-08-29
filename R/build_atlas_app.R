@@ -182,6 +182,8 @@ atlas_theme_css <- function() {
     ".atlas-provenance strong { color: #e5e7eb; }",
     ".atlas-provenance strong, .atlas-provenance small { display: block; }",
     ".atlas-provenance small { color: #7f8b9b; margin-top: 3px; }",
+    ".atlas-capital-panel { padding-top: 12px; }",
+    ".atlas-capital-note { color: #9ca3af; font-size: 0.9rem; margin-bottom: 12px; }",
     "#map { border: 1px solid #243041; border-radius: 7px; overflow: hidden; }",
     ".leaflet-container { background: #0b1220; }",
     ".leaflet-tile-pane { filter: brightness(0.55) invert(1) contrast(1.15) hue-rotate(180deg) saturate(0.35); }",
@@ -402,7 +404,24 @@ build_atlas_ui <- function(projects, metadata) {
         width = 3
       ),
       shiny::mainPanel(
-        leaflet::leafletOutput("map", height = "82vh"),
+        shiny::tabsetPanel(
+          id = "atlas_view",
+          shiny::tabPanel(
+            "Territorio",
+            leaflet::leafletOutput("map", height = "82vh")
+          ),
+          shiny::tabPanel(
+            "Capital",
+            shiny::tags$div(
+              class = "atlas-capital-panel",
+              shiny::tags$p(
+                class = "atlas-capital-note",
+                "Origen de capital según campo informado por SIACAM; no implica domicilio corporativo ni propiedad actual."
+              ),
+              shiny::tableOutput("capital_table")
+            )
+          )
+        ),
         width = 9
       )
     )

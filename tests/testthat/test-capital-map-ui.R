@@ -1,4 +1,5 @@
 app_path <- file.path("..", "..", "R", "build_atlas_app.R")
+filter_path <- file.path("..", "..", "R", "filter_projects.R")
 canonicalize_path <- file.path("..", "..", "R", "canonicalize_company_values.R")
 companies_path <- file.path("..", "..", "R", "extract_project_companies.R")
 summary_path <- file.path("..", "..", "R", "summarize_capital_origins.R")
@@ -7,6 +8,7 @@ capital_map_path <- file.path("..", "..", "R", "capital_map.R")
 source(canonicalize_path)
 source(companies_path)
 source(summary_path)
+source(filter_path)
 source(app_path)
 source(capital_map_path)
 
@@ -95,4 +97,29 @@ test_that("Capital Map UI adds Capital without replacing the territorial map", {
     "Origen de capital según campo informado por SIACAM; no implica domicilio corporativo ni propiedad actual.",
     fixed = TRUE
   )
+})
+
+test_that("Capital table reacts to existing project and origin filters", {
+  app <- build_atlas_app(projects, metadata)
+  server <- app$serverFuncSource()
+
+  shiny::testServer(server, {
+    session$setInputs(
+      province = "Todos",
+      mineral = "Todos",
+      stage = "Todos",
+      capital_origin = "Todos"
+    )
+
+    expect_match(output$capital_table, "Canadá", fixed = TRUE)
+    expect_match(output$capital_table, "Argentina", fixed = TRUE)
+
+    session$setInputs(capital_origin = "Argentina")
+    expect_match(output$capital_table, "Argentina", fixed = TRUE)
+    expect_false(grepl("Canadá", output$capital_table, fixed = TRUE))
+
+    session$setInputs(province = "Jujuy", capital_origin = "Todos")
+    expect_match(output$capital_table, "Canadá", fixed = TRUE)
+    expect_false(grepl("Argentina", output$capital_table, fixed = TRUE))
+  })
 })

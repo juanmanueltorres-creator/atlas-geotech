@@ -23,6 +23,17 @@ atlas_display_value <- function(value) {
   value
 }
 
+atlas_company_value_is_missing <- function(value) {
+  value <- trimws(as.character(value))
+  is.na(value) | !nzchar(value) | value == "-"
+}
+
+atlas_company_display_value <- function(value) {
+  value <- trimws(as.character(value))
+  value[atlas_company_value_is_missing(value)] <- "Sin dato"
+  value
+}
+
 atlas_province_check <- function(value) {
   if (is.na(value)) {
     return("Comparación territorial no disponible")
@@ -117,16 +128,16 @@ atlas_controller_rows <- function(projects, index) {
       as.character(projects[[paste0("controller_", rank)]][[index]])
     )
 
-    if (is.na(company) || !nzchar(company)) {
+    if (atlas_company_value_is_missing(company)) {
       return(NULL)
     }
 
     list(
       company_name = company,
-      share_text = atlas_display_value(
+      share_text = atlas_company_display_value(
         projects[[paste0("share_", rank)]][[index]]
       )[[1]],
-      capital_origin = atlas_display_value(
+      capital_origin = atlas_company_display_value(
         projects[[paste0("origin_", rank)]][[index]]
       )[[1]]
     )

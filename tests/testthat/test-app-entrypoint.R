@@ -46,6 +46,24 @@ test_that("root app.R exists", {
 })
 
 if (file.exists(app_path)) {
+  test_that("root app.R wires capital origin canonization before company extraction", {
+    app_lines <- readLines(app_path, warn = FALSE)
+    canonicalize_line <- grep(
+      'source("R/canonicalize_company_values.R", local = TRUE)',
+      app_lines,
+      fixed = TRUE
+    )
+    companies_line <- grep(
+      'source("R/extract_project_companies.R", local = TRUE)',
+      app_lines,
+      fixed = TRUE
+    )
+
+    expect_length(canonicalize_line, 1L)
+    expect_length(companies_line, 1L)
+    expect_lt(canonicalize_line, companies_line)
+  })
+
   test_that("root app.R builds a Shiny app from ATLAS_DATA_DIR", {
     directory <- tempfile("atlas-entrypoint-")
     on.exit(unlink(directory, recursive = TRUE), add = TRUE)
@@ -70,6 +88,10 @@ if (file.exists(app_path)) {
 
     expect_true(exists("app", envir = env, inherits = FALSE))
     expect_s3_class(env$app, "shiny.appobj")
+    expect_true(
+      exists("canonicalize_capital_origin", envir = env, inherits = FALSE),
+      info = "app.R must load capital origin canonization for production data"
+    )
     expect_true(
       exists("extract_project_companies", envir = env, inherits = FALSE),
       info = "app.R must load the company extraction helper for production data"

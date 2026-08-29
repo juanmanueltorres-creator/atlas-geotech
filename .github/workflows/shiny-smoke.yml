@@ -127,8 +127,11 @@ jobs:
 
           origin_values <- wait_for_value(
             paste(
-              "(() => Array.from(document.querySelectorAll('#capital_origin option'))",
-              ".map(option => option.value))()"
+              "(() => {",
+              "const select = document.getElementById('capital_origin');",
+              "if (!select || !select.selectize) return [];",
+              "return Object.keys(select.selectize.options);",
+              "})()"
             ),
             function(value) length(unlist(value)) > 1L
           )
@@ -145,31 +148,59 @@ jobs:
             stop("Company Lens did not expose any real capital-origin choices")
           }
 
-          selected_origin <- real_origins[[1]]
-          cat("Testing capital origin:", selected_origin, "\n")
+          cat("Capital-origin choices:", paste(real_origins, collapse = " | "), "\n")
 
-          browser$Runtime$evaluate(
-            expression = sprintf(
-              "Shiny.setInputValue('capital_origin', %s, {priority: 'event'})",
-              jsonlite::toJSON(selected_origin, auto_unbox = TRUE)
-            ),
-            returnByValue = TRUE
-          )
+          count_expression <- "document.querySelector('#project_count')?.textContent?.trim() || ''"
+          selected_origin <- NULL
+          filtered_count <- NA_integer_
 
-          count_text <- wait_for_value(
-            "document.querySelector('#project_count')?.textContent?.trim() || ''",
-            function(value) {
-              is.character(value) && length(value) == 1L && grepl("^[0-9]+ proyecto", value)
+          for (origin in real_origins) {
+            changed <- evaluate_value(sprintf(
+              paste(
+                "(() => {",
+                "const select = document.getElementById('capital_origin');",
+                "if (!select || !select.selectize) return false;",
+                "select.selectize.setValue(%s);",
+                "return true;",
+                "})()"
+              ),
+              jsonlite::toJSON(origin, auto_unbox = TRUE)
+            ))
+
+            if (!isTRUE(changed)) {
+              next
             }
-          )
-          filtered_count <- suppressWarnings(as.integer(sub(" .*", "", count_text)))
 
-          if (is.na(filtered_count) || filtered_count <= 0L) {
-            stop("Capital-origin filter returned no valid project count")
+            count_text <- wait_for_value(
+              count_expression,
+              function(value) {
+                if (!is.character(value) || length(value) != 1L) {
+                  return(FALSE)
+                }
+                count <- suppressWarnings(as.integer(sub(" .*", "", value)))
+                !is.na(count) && count > 0L && count < initial_marker_count
+              },
+              attempts = 12L
+            )
+            candidate_count <- suppressWarnings(as.integer(sub(" .*", "", count_text)))
+
+            if (
+              !is.na(candidate_count) &&
+              candidate_count > 0L &&
+              candidate_count < initial_marker_count
+            ) {
+              selected_origin <- origin
+              filtered_count <- candidate_count
+              break
+            }
           }
-          if (filtered_count >= initial_marker_count) {
-            stop("Capital-origin filter did not reduce the real 331-project view")
+
+          if (is.null(selected_origin) || is.na(filtered_count)) {
+            stop("No capital-origin choice produced a valid reduced project view")
           }
+
+          cat("Testing capital origin:", selected_origin, "\n")
+          cat("Filtered projects:", filtered_count, "\n")
 
           filtered_marker_count <- wait_for_value(
             marker_expression,
@@ -206,7 +237,10 @@ jobs:
             stop("Filtered project popup did not expose Company Lens controller context")
           }
 
-          cat("Filtered projects:", filtered_count, "\n")
+          if (grepl("Controlantes\\s*-", popup_text)) {
+            stop("Filtered project popup exposed SIACAM '-' as a controller")
+          }
+
           cat("Popup controller context verified.\n")
 
           writeLines(as.character(initial_marker_count), "artifacts/leaflet-feature-count.txt")

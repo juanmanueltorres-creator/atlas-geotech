@@ -31,6 +31,25 @@ company_projects <- data.frame(
   stringsAsFactors = FALSE
 )
 
+placeholder_projects <- data.frame(
+  name = "Proyecto Placeholder",
+  commodity = "Cobre",
+  stage = "Exploración",
+  source_province = "San Juan",
+  spatial_province = "San Juan",
+  province_match = TRUE,
+  controller_1 = "Empresa Real",
+  share_1 = "-",
+  origin_1 = "-",
+  controller_2 = "-",
+  share_2 = "-",
+  origin_2 = "-",
+  controller_3 = NA_character_,
+  share_3 = NA_character_,
+  origin_3 = NA_character_,
+  stringsAsFactors = FALSE
+)
+
 test_that("build_project_popup is available", {
   expect_true(exists("build_project_popup", mode = "function"))
 })
@@ -77,5 +96,14 @@ if (exists("build_project_popup", mode = "function")) {
     expect_match(popup, "Empresa &lt;B&gt;", fixed = TRUE)
     expect_match(popup, "Canadá", fixed = TRUE)
     expect_match(popup, "Sin dato", fixed = TRUE)
+  })
+
+  test_that("project popups treat SIACAM dash placeholders as missing values", {
+    popup <- build_project_popup(placeholder_projects)[[1]]
+
+    expect_match(popup, "Empresa Real", fixed = TRUE)
+    expect_match(popup, "Sin dato", fixed = TRUE)
+    expect_false(grepl("<br/>- · - · -", popup, fixed = TRUE))
+    expect_false(grepl("Empresa Real · - · -", popup, fixed = TRUE))
   })
 }

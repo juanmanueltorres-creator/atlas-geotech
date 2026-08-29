@@ -34,6 +34,16 @@ atlas_company_display_value <- function(value) {
   value
 }
 
+atlas_canonical_capital_origin <- function(value) {
+  value <- as.character(value)
+
+  if (exists("canonicalize_capital_origin", mode = "function", inherits = TRUE)) {
+    return(canonicalize_capital_origin(value))
+  }
+
+  value
+}
+
 atlas_province_check <- function(value) {
   if (is.na(value)) {
     return("Comparación territorial no disponible")
@@ -138,7 +148,9 @@ atlas_controller_rows <- function(projects, index) {
         projects[[paste0("share_", rank)]][[index]]
       )[[1]],
       capital_origin = atlas_company_display_value(
-        projects[[paste0("origin_", rank)]][[index]]
+        atlas_canonical_capital_origin(
+          projects[[paste0("origin_", rank)]][[index]]
+        )
       )[[1]]
     )
   })

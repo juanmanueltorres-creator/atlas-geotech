@@ -9,7 +9,7 @@ Atlas nació sobre 331 proyectos mineros SIACAM validados como *snapshot*. Esta 
 - **Minería:** Territorio | Capital | **Proveedores B2B**.
 - **Petróleo y gas:** **Operadoras** | **Proveedores B2B** | **Datos y fuentes**.
 
-El usuario pidió priorizar petróleo. Por eso la primera muestra incluye **3 ejemplos de operadoras, 4 prestadores industriales y 5 recursos argentinos de hidrocarburos**, siempre con enlace a la evidencia. Minería conserva SIACAM y agrega por ahora la puerta de entrada al Registro Federal de Proveedores Mineros, sin importar nombres no validados.
+El usuario pidió priorizar petróleo. Por eso la primera muestra incluye **3 ejemplos de operadoras, 4 prestadores industriales y 9 recursos argentinos de hidrocarburos**, siempre con enlace a la evidencia. Minería conserva SIACAM y agrega por ahora la puerta de entrada al Registro Federal de Proveedores Mineros, sin importar nombres no validados.
 
 ## Diferencias entre entidades que nunca deben mezclarse
 
@@ -33,6 +33,15 @@ El campo `accessed_on` es **fecha de consulta de la referencia**, no actualizaci
 5. **INTI, petróleo y gas**: https://www.argentina.gob.ar/inti/servicios-inti/petroleo-y-gas . Herramientas de capacitación, certificación, medición y vinculación de proveedores.
 6. **Registro Federal de Proveedores Mineros**: https://www.argentina.gob.ar/economia/mineria/registro-federal-de-proveedores-mineros . Información **autodeclarada y no certificada**; nunca presentar como una validación comercial de capacidades.
 
+### Fuentes oficiales adicionales verificadas (2026-11-21)
+
+- Producción por pozo 2026: https://www.datos.gob.ar/es/dataset/energia-produccion-petroleo-gas-por-pozo-capitulo-iv/archivo/energia_fb7a47a0-cba9-4667-a004-6f6c1c346c23
+- Listado de pozos por operadora: https://www.datos.gob.ar/es/dataset/energia-produccion-petroleo-gas-por-pozo-capitulo-iv/archivo/energia_cbfa4d79-ffb3-4096-bab5-eb0dde9a8385
+- Geografía oficial de pozos y concesiones: https://www.argentina.gob.ar/economia/energia/planeamiento-energetico/informacion-energetica/sistema-unificado-de-informacion-2
+- Portal estadístico y registros sectoriales: https://www.argentina.gob.ar/economia/energia/planeamiento-energetico/informacion-energetica/sistema-unificado-de-informacion-13
+
+**Diferencia de escala:** los 331 registros de SIACAM son *proyectos mineros* en un snapshot procesado; los 7 registros cargados en petróleo son *empresas ilustrativas*. No son censos comparables. Los datos oficiales petroleros permiten un pipeline mayor, pero ese dataset todavía no está descargado, validado ni espacializado en Atlas.
+
 ## Comparaciones internacionales para aprender, no para mezclar datos
 
 - **Noruega / Sokkeldirektoratet FactPages**: https://factpages.sodir.no/ . Modelo de datos y servicios que enlazan pozos, producción, licencias, operadores y fecha de vigencia. Una referencia de estructura interoperable y trazabilidad geográfica.
@@ -53,7 +62,7 @@ El campo `accessed_on` es **fecha de consulta de la referencia**, no actualizaci
 ## Modelo actual y límites de implementación
 
 - `data/reference/industry_companies.csv`: 7 entradas de empresas petroleras, etiqueta de rol, actividad amplia, evidencia y limitación.
-- `data/reference/industry_sources.csv`: catálogo de recursos de datos, directorios y referencias. Solo cinco recursos argentinos de oil & gas forman el menú petrolero; el resto son minería y referencias mundiales.
+- `data/reference/industry_sources.csv`: catálogo de recursos de datos, directorios y referencias. Nueve recursos argentinos de oil & gas forman el menú petrolero; el resto son minería y referencias mundiales.
 - `R/industry_catalog.R`: carga local, contrato de columnas, validación HTTPS, filtrado y presentación de recursos; **no hace scraping ni llamadas web al iniciar la aplicación**.
 - `R/build_atlas_app.R`: pestañas principales y subcategorías, sin sustituir los filtros SIACAM existentes.
 - `app.R`: integra la nueva fuente documental.

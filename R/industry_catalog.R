@@ -85,7 +85,7 @@ atlas_oil_ui <- function(oil=NULL) {
           class="atlas-industry-context",
           shiny::tags$strong("No hay datos petroleros importados en este despliegue"),
           shiny::tags$p("Se necesita un snapshot procesado desde la fuente oficial, validado y publicado por separado. No se muestran puntos de ejemplo como si fueran reales."),
-          atlas_catalog_link(ATLAS_OIL_PRODUCTION_2026_URL,"Descargar producción oficial 2026 ↗")
+          atlas_catalog_link("https://datos.gob.ar/dataset/energia-produccion-petroleo-gas-por-pozo-capitulo-iv","Abrir catálogo oficial del Capítulo IV ↗")
         ) else shiny::tags$div(
           shiny::tags$p("Producción declarada por empresa y mes, vinculada a geometrías válidas del padrón Capítulo IV. Los casos sin ubicación segura quedan fuera de este mapa."),
           shiny::fluidRow(

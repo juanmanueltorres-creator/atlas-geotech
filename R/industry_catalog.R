@@ -66,18 +66,44 @@ atlas_catalog_table <- function(rows, columns) {
   )
 }
 
-atlas_oil_ui <- function() {
+atlas_oil_ui <- function(oil=NULL) {
   companies <- atlas_reference_companies()
   sources <- atlas_reference_sources()
   shiny::tags$div(
     class = "atlas-industry-panel",
     shiny::tags$h3("Petróleo y gas · Argentina"),
     shiny::tags$p(
-      "Primera muestra documentada de empresas y fuentes públicas. ",
-      "No se han importado mediciones por pozo ni asignado concesiones, clientes o contratos."
+      if(is.null(oil)) "Catálogo de empresas y fuentes públicas. Todavía no hay un snapshot validado de pozos y producción para explorar."
+      else paste("Snapshot validado de Capítulo IV ·", nrow(oil$records),
+                 "registros mensuales ubicados. No representa telemetría en tiempo real.")
     ),
     shiny::tabsetPanel(
       id = "oil_subview",
+      shiny::tabPanel(
+        "Pozos y producción",
+        if(is.null(oil)) shiny::tags$div(
+          class="atlas-industry-context",
+          shiny::tags$strong("No hay datos petroleros importados en este despliegue"),
+          shiny::tags$p("Se necesita un snapshot procesado desde la fuente oficial, validado y publicado por separado. No se muestran puntos de ejemplo como si fueran reales."),
+          atlas_catalog_link(ATLAS_OIL_PRODUCTION_2026_URL,"Descargar producción oficial 2026 ↗")
+        ) else shiny::tags$div(
+          shiny::tags$p("Producción declarada por empresa y mes, vinculada a geometrías válidas del padrón Capítulo IV. Los casos sin ubicación segura quedan fuera de este mapa."),
+          shiny::fluidRow(
+            shiny::column(4,shiny::selectInput("oil_operator","Operadora",
+              choices=c("Todas",sort(unique(oil$records$empresa))))),
+            shiny::column(4,shiny::selectInput("oil_year","Año",
+              choices=sort(unique(oil$records$anio)),selected=max(oil$records$anio))),
+            shiny::column(4,shiny::selectInput("oil_month","Mes",choices=c("Todos",as.character(1:12))))
+          ),
+          shiny::textOutput("oil_summary"),
+          leaflet::leafletOutput("oil_map",height="68vh"),
+          shiny::tags$p(class="atlas-provenance",
+            paste("Fuente: Secretaría de Energía - Capítulo IV. Recuperado:",
+                  as.character(oil$metadata$retrieved_at[[1]]),
+                  "UTC. Volúmenes en m³ de petróleo y miles de m³ de gas. No se imputan datos faltantes.")
+          )
+        )
+      ),
       shiny::tabPanel(
         "Operadoras",
         shiny::tags$h4("Empresas de referencia"),

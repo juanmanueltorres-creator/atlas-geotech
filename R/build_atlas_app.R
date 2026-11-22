@@ -279,19 +279,28 @@ build_project_popup <- function(projects) {
 }
 
 atlas_format_retrieved_at <- function(values) {
-  values <- trimws(as.character(values))
-  parsed <- as.POSIXct(
-    values,
-    format = "%Y-%m-%dT%H:%M:%SZ",
-    tz = "UTC"
-  )
+  original <- trimws(as.character(values))
+
+  # readr can parse a UTC ISO timestamp into POSIXct before it reaches Shiny.
+  # Character inputs may still use ISO 8601 or readr's space-separated display.
+  if (inherits(values, "POSIXt")) {
+    parsed <- as.POSIXct(values)
+  } else {
+    parsed <- as.POSIXct(original, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+    needs_fallback <- is.na(parsed) & !is.na(original)
+    if (any(needs_fallback)) {
+      parsed[needs_fallback] <- as.POSIXct(
+        original[needs_fallback], format = "%Y-%m-%d %H:%M:%S", tz = "UTC"
+      )
+    }
+  }
 
   formatted <- format(
     parsed,
     tz = "America/Argentina/Cordoba",
     format = "%d/%m/%Y · %H:%M ART"
   )
-  formatted[is.na(parsed)] <- values[is.na(parsed)]
+  formatted[is.na(parsed)] <- original[is.na(parsed)]
   formatted
 }
 

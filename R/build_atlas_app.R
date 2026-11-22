@@ -351,7 +351,7 @@ atlas_provenance_ui <- function(metadata) {
   )
 }
 
-build_atlas_ui <- function(projects, metadata) {
+build_atlas_ui <- function(projects, metadata, oil=NULL) {
   required_fields <- c("spatial_province", "commodity", "stage")
   missing_fields <- setdiff(required_fields, names(projects))
 
@@ -453,16 +453,16 @@ build_atlas_ui <- function(projects, metadata) {
       shiny::tabPanel(
         "Petróleo y gas",
         if (exists("atlas_oil_ui", mode = "function", inherits = TRUE))
-          atlas_oil_ui()
+          atlas_oil_ui(oil)
         else shiny::tags$p("Fuentes de hidrocarburos no disponibles.")
       )
     )
   )
 }
 
-build_atlas_app <- function(projects, metadata) {
+build_atlas_app <- function(projects, metadata, oil=NULL) {
   companies <- atlas_project_companies(projects)
-  ui <- build_atlas_ui(projects, metadata)
+  ui <- build_atlas_ui(projects, metadata, oil=oil)
 
   server <- function(input, output, session) {
     filtered_projects <- shiny::reactive({
@@ -514,6 +514,68 @@ build_atlas_app <- function(projects, metadata) {
       )
       atlas_capital_table_data(summary)
     }, rownames = FALSE)
+
+    # Oil view is independent of SIACAM filters and exists only for validated snapshots.
+    if(!is.null(oil)) {
+      oil_filtered <- shiny::reactive({
+        x <- oil$records
+        if(!is.null(input$oil_operator) && input$oil_operator != "Todas")
+          x <- x[x$empresa == input$oil_operator, , drop=FALSE]
+        if(!is.null(input$oil_year))
+          x <- x[x$anio == as.integer(input$oil_year), , drop=FALSE]
+        if(!is.null(input$oil_month) && input$oil_month != "Todos")
+          x <- x[x$mes == as.integer(input$oil_month), , drop=FALSE]
+        x
+      })
+
+      oil_points <- shiny::reactive({
+        data <- oil_filtered()
+        if(!nrow(data)) return(data)
+        # One point per well and operator: selected months are summed,
+        # but completely missing volumes remain unknown, never zero.
+        groups <- split(seq_len(nrow(data)), paste(data$idpozo,data$empresa,sep="|"))
+        combine <- function(values) if(all(is.na(values))) NA_real_ else sum(values,na.rm=TRUE)
+        result <- lapply(groups,function(ix){
+          row <- data[ix[[1]], , drop=FALSE]
+          row$petroleo_m3 <- combine(data$petroleo_m3[ix])
+          row$gas_miles_m3 <- combine(data$gas_miles_m3[ix])
+          row$period_count <- length(unique(paste(data$anio[ix],data$mes[ix],sep="-")))
+          row
+        })
+        do.call(rbind,result)
+      })
+
+      output$oil_summary <- shiny::renderText({
+        x<-oil_points()
+        count<-nrow(x)
+        shown<-min(3000L,count)
+        paste0(count," pozos/operadoras con ubicación validada para el filtro; ",
+          shown," representados en el mapa.",
+          if(count>3000L)" Límite de 3000 puntos para evitar sobrecargar el navegador." else "")
+      })
+
+      output$oil_map <- leaflet::renderLeaflet({
+        data<-oil_points()
+        map<-leaflet::addProviderTiles(leaflet::leaflet(),provider=atlas_basemap_provider())
+        if(!nrow(data)) return(map)
+        # Deterministic limit and explicit count; no invented geometry.
+        data<-data[order(data$idpozo,data$empresa),,drop=FALSE]
+        data<-utils::head(data,3000L)
+        safe<-function(x) as.character(htmltools::htmlEscape(as.character(x)))
+        qty<-function(x) if(is.na(x)) "Sin dato" else format(round(x,2),big.mark=".",decimal.mark=",")
+        popups<-vapply(seq_len(nrow(data)),function(i){
+          paste0("<strong>Pozo ",safe(data$idpozo[[i]]),"</strong><br>",
+            "Operadora declarada: ",safe(data$empresa[[i]]),"<br>",
+            "Petróleo: ",qty(data$petroleo_m3[[i]])," m³<br>",
+            "Gas: ",qty(data$gas_miles_m3[[i]])," miles de m³<br>",
+            "Períodos incluidos: ",data$period_count[[i]],
+            "<br><small>Capítulo IV · datos declarados, no telemetría.</small>")
+        },character(1))
+        leaflet::addCircleMarkers(map,lng=data$longitude,lat=data$latitude,
+          radius=4,stroke=TRUE,weight=1,color="#93d5d7",
+          fillColor="#5faab0",fillOpacity=.65,popup=popups)
+      })
+    }
 
     output$map <- leaflet::renderLeaflet({
       data <- filtered_projects()

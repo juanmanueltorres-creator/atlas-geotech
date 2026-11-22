@@ -1,0 +1,56 @@
+name: Capítulo IV - official oil snapshot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/oil-official-refresh.yml
+      - scripts/refresh_oil_wells.R
+      - R/oil_wells.R
+
+permissions:
+  contents: read
+
+jobs:
+  official-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.5'
+          use-public-rspm: true
+
+      - name: Install CSV dependency
+        shell: Rscript {0}
+        run: |
+          install.packages("readr")
+
+      - name: Download and validate official 2026 production and well inventory
+        run: |
+          Rscript scripts/refresh_oil_wells.R --out=artifacts/processed/oil
+
+      - name: Verify processed snapshot and exclusion metrics
+        shell: Rscript {0}
+        run: |
+          source("R/oil_wells.R")
+          snapshot <- atlas_oil_read_snapshot("artifacts/processed")
+          if(is.null(snapshot) || !nrow(snapshot$records))
+            stop("No verified well production records")
+          if(nrow(snapshot$records)!=snapshot$metadata$record_count[[1]])
+            stop("Provenance count mismatch")
+          print(snapshot$metadata)
+          cat("Distinct geolocated wells:",length(unique(snapshot$records$idpozo)),"\n")
+          cat("Snapshot is a workflow artifact, NOT committed or deployed.\n")
+
+      - name: Upload validated oil artifact for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-capitulo-iv-2026-validated
+          path: artifacts/processed/oil
+          if-no-files-found: error
+          retention-days: 14

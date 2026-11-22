@@ -279,19 +279,28 @@ build_project_popup <- function(projects) {
 }
 
 atlas_format_retrieved_at <- function(values) {
-  values <- trimws(as.character(values))
-  parsed <- as.POSIXct(
-    values,
-    format = "%Y-%m-%dT%H:%M:%SZ",
-    tz = "UTC"
-  )
+  original <- trimws(as.character(values))
+
+  # readr can parse a UTC ISO timestamp into POSIXct before it reaches Shiny.
+  # Character inputs may still use ISO 8601 or readr's space-separated display.
+  if (inherits(values, "POSIXt")) {
+    parsed <- as.POSIXct(values)
+  } else {
+    parsed <- as.POSIXct(original, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+    needs_fallback <- is.na(parsed) & !is.na(original)
+    if (any(needs_fallback)) {
+      parsed[needs_fallback] <- as.POSIXct(
+        original[needs_fallback], format = "%Y-%m-%d %H:%M:%S", tz = "UTC"
+      )
+    }
+  }
 
   formatted <- format(
     parsed,
     tz = "America/Argentina/Cordoba",
     format = "%d/%m/%Y · %H:%M ART"
   )
-  formatted[is.na(parsed)] <- values[is.na(parsed)]
+  formatted[is.na(parsed)] <- original[is.na(parsed)]
   formatted
 }
 
@@ -364,13 +373,22 @@ build_atlas_ui <- function(projects, metadata) {
 
   shiny::fluidPage(
     shiny::tags$head(
-      shiny::tags$style(shiny::HTML(atlas_theme_css()))
+      shiny::tags$style(shiny::HTML(paste(
+        atlas_theme_css(),
+        if (exists("atlas_industry_css", mode = "function", inherits = TRUE)) atlas_industry_css() else "",
+        sep = "\n"
+      )))
     ),
     shiny::tags$div(
       class = "atlas-header",
-      shiny::tags$h2("Atlas Geotech · Minería Argentina")
+      shiny::tags$h2("Atlas Geotech · Minería y petróleo · Argentina"),
+      shiny::tags$p("Curaduría y desarrollo: Juan Manuel Torres · Fuentes públicas argentinas · Evidencia y límites por registro")
     ),
-    shiny::sidebarLayout(
+    shiny::tabsetPanel(
+      id = "sector_view",
+      shiny::tabPanel(
+        "Minería",
+        shiny::sidebarLayout(
       shiny::sidebarPanel(
         shiny::selectInput(
           "province",
@@ -420,9 +438,23 @@ build_atlas_ui <- function(projects, metadata) {
               ),
               shiny::tableOutput("capital_table")
             )
+          ),
+          shiny::tabPanel(
+            "Proveedores B2B",
+            if (exists("atlas_mining_providers_ui", mode = "function", inherits = TRUE))
+              atlas_mining_providers_ui()
+            else shiny::tags$p("Catálogo de proveedores no disponible.")
           )
         ),
         width = 9
+      )
+        )
+      ),
+      shiny::tabPanel(
+        "Petróleo y gas",
+        if (exists("atlas_oil_ui", mode = "function", inherits = TRUE))
+          atlas_oil_ui()
+        else shiny::tags$p("Fuentes de hidrocarburos no disponibles.")
       )
     )
   )

@@ -364,13 +364,21 @@ build_atlas_ui <- function(projects, metadata) {
 
   shiny::fluidPage(
     shiny::tags$head(
-      shiny::tags$style(shiny::HTML(atlas_theme_css()))
+      shiny::tags$style(shiny::HTML(paste(
+        atlas_theme_css(),
+        if (exists("atlas_industry_css", mode = "function", inherits = TRUE)) atlas_industry_css() else "",
+        sep = "\\n"
+      )))
     ),
     shiny::tags$div(
       class = "atlas-header",
-      shiny::tags$h2("Atlas Geotech · Minería Argentina")
+      shiny::tags$h2("Atlas Geotech · Minería y petróleo · Argentina")
     ),
-    shiny::sidebarLayout(
+    shiny::tabsetPanel(
+      id = "sector_view",
+      shiny::tabPanel(
+        "Minería",
+        shiny::sidebarLayout(
       shiny::sidebarPanel(
         shiny::selectInput(
           "province",
@@ -420,9 +428,23 @@ build_atlas_ui <- function(projects, metadata) {
               ),
               shiny::tableOutput("capital_table")
             )
+          ),
+          shiny::tabPanel(
+            "Proveedores B2B",
+            if (exists("atlas_mining_providers_ui", mode = "function", inherits = TRUE))
+              atlas_mining_providers_ui()
+            else shiny::tags$p("Catálogo de proveedores no disponible.")
           )
         ),
         width = 9
+      )
+        )
+      ),
+      shiny::tabPanel(
+        "Petróleo y gas",
+        if (exists("atlas_oil_ui", mode = "function", inherits = TRUE))
+          atlas_oil_ui()
+        else shiny::tags$p("Fuentes de hidrocarburos no disponibles.")
       )
     )
   )

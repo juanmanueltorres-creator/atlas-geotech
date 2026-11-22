@@ -2,6 +2,15 @@ name: Shiny real-data smoke
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/shiny-smoke.yml
+      - app.R
+      - R/build_atlas_app.R
+      - R/industry_catalog.R
+      - R/oil_wells.R
+      - R/run_atlas_app.R
+      - data/processed/**
   push:
     branches:
       - main

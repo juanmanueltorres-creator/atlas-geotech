@@ -367,12 +367,13 @@ build_atlas_ui <- function(projects, metadata) {
       shiny::tags$style(shiny::HTML(paste(
         atlas_theme_css(),
         if (exists("atlas_industry_css", mode = "function", inherits = TRUE)) atlas_industry_css() else "",
-        sep = "\\n"
+        sep = "\n"
       )))
     ),
     shiny::tags$div(
       class = "atlas-header",
-      shiny::tags$h2("Atlas Geotech · Minería y petróleo · Argentina")
+      shiny::tags$h2("Atlas Geotech · Minería y petróleo · Argentina"),
+      shiny::tags$p("Curaduría y desarrollo: Juan Manuel Torres · Fuentes públicas argentinas · Evidencia y límites por registro")
     ),
     shiny::tabsetPanel(
       id = "sector_view",

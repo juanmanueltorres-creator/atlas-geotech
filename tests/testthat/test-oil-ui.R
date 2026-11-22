@@ -19,7 +19,7 @@ test_that("oil category differentiates unavailable snapshot from real validated 
  expect_match(html,'id="oil_month"',fixed=TRUE)
  expect_match(html,'id="oil_map"',fixed=TRUE)
  expect_match(html,"OPERADORA DE PRUEBA",fixed=TRUE)
- expect_match(html,"datos declarados",fixed=TRUE)
+ expect_match(html,"Producción declarada",fixed=TRUE)
 })
 
 test_that("invalid CSVs never become map markers or a declared live feed",{

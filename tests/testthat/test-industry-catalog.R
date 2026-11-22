@@ -24,7 +24,7 @@ test_that("oil industry category has separate navigation and provenance links", 
   expect_match(html, "Datos y fuentes", fixed = TRUE)
   expect_match(html, "San Antonio Internacional", fixed = TRUE)
   expect_match(html, "YPF", fixed = TRUE)
-  expect_match(html, "No se han importado mediciones por pozo", fixed = TRUE)
+  expect_match(html, "Todavía no hay un snapshot validado", fixed = TRUE)
   expect_match(html, 'rel="noopener noreferrer"', fixed = TRUE)
 })
 
